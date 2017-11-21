@@ -36,7 +36,7 @@ document.addEventListener('DOMContentLoaded', function(){
                 alien: new Alien(),         //alien spaceship
                 score: 0,                   //player score (+10 for fly one grid element and +100 for hitting alien)
                 hitted: 0,              //hitted aliens by missle
-                fire: false   //spacebar - missle don't fired
+                fire: false,   //spacebar - missle don't fired
             };
         }
 
@@ -97,7 +97,7 @@ document.addEventListener('DOMContentLoaded', function(){
                     clearInterval(this.missleInterval);
                 }
             }
-        },200);
+        },50);
     }
 
 
@@ -261,6 +261,7 @@ document.addEventListener('DOMContentLoaded', function(){
 
 
 
+
     startAliens = () => {
         let gameSpace = this;
         this.alienIdSetInterval = setInterval(()=>{
@@ -305,7 +306,7 @@ document.addEventListener('DOMContentLoaded', function(){
                 }
             },3000);
 
-
+        
 
 
 
@@ -378,7 +379,7 @@ document.addEventListener('DOMContentLoaded', function(){
                     HITTED:
                     <strong>{this.props.hitted}</strong> <br/>
                     JETFIGHTERS:
-                    <strong>{this.props.jets}</strong> 
+                    <strong>{this.props.jets}</strong>
                   </div>
                 </section>
             );
