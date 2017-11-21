@@ -27,11 +27,13 @@ document.addEventListener('DOMContentLoaded', function(){
         constructor(props){
             super(props);
             this.state={
+                endGame: false,
                 counter: 200,
                 board: [],
                 jet: new JetFighter(),
                 alien: new Alien(),
                 score: 0,
+                fire: false   //spacebar - missle don't fired
             };
         }
 
@@ -66,25 +68,22 @@ document.addEventListener('DOMContentLoaded', function(){
         let space = this;
         let misslePositionY = positionY;
         let misslePositionX = positionX;
-        console.log('ruszam pociskiem:');
-        console.log(misslePositionX, misslePositionY);
+        this.setState({
+            fire:true
+        });
         this.missleInterval = setInterval(()=>{
             space.showElement('',misslePositionX, misslePositionY);  //HIDE MISSLE
             misslePositionY = misslePositionY - 1;
-            space.showElement('fireMissle',misslePositionX, misslePositionY);  //SHOW MISSLE
-            console.log(misslePositionX, misslePositionY);
-            if(misslePositionY === 0){
-                clearInterval(this.missleInterval);
-                console.log('killl missle in 0');
+            if(misslePositionY !== -1){
+                space.showElement('fireMissle',misslePositionX, misslePositionY);  //SHOW MISSLE
             }
-            else if(misslePositionY < 0){
+            if(misslePositionY < 0){
+                space.setState({
+                    fire:false
+                });
                 clearInterval(this.missleInterval);
-                console.log('killl missle in < 0');
             }
-
-
         },500);
-
     }
 
 
@@ -167,53 +166,68 @@ document.addEventListener('DOMContentLoaded', function(){
                 }
                 this.showElement('jetFighter',this.state.jet.x, this.state.jet.y); //SHOW JET
                 break;
-            //case 32: //Fire button
-            //    this.showElement('fireMissle',this.state.jet.x, this.state.jet.y-1); //SHOW MISSLE
-            //    this.moveMissle(this.state.jet.x, this.state.jet.y-1);
-            //    break;
-        }
-    }
-
-
-    fireMissleJet = (event)=> {
-        switch (event.which){
             case 32: //Fire button
-                this.showElement('fireMissle',this.state.jet.x, this.state.jet.y-1); //SHOW MISSLE
-                this.moveMissle(this.state.jet.x, this.state.jet.y-1);
+                if(this.state.fire === false){
+                    this.showElement('fireMissle',this.state.jet.x, this.state.jet.y-1); //SHOW MISSLE
+                    this.moveMissle(this.state.jet.x, this.state.jet.y-1);
+                }
                 break;
         }
     }
 
 
-    startGame = () => {
+
+
+
+    startAliens = () => {
         let gameSpace = this;
         this.idSetInterval = setInterval(()=>{
             gameSpace.moveAlien();
+            this.setState({
+                score: this.state.score + 10
+            });
+            if(this.state.alien.y === 11){
+                clearInterval(this.idSetInterval);
+            }
         },250);
     }
 
 
 
     componentDidMount(){
-        //INITIAL BOARD WITH SPACE SHIPS
-        this.showElement('jetFighter',this.state.jet.x, this.state.jet.y); //SHOW JET
-        //Waiting for state update and then we have another update
-        this.timeoutId = setTimeout(()=>{
-            this.showElement('alien',this.state.alien.x, this.state.alien.y);  //SHOW ALIEN
-        },10);
-        //------------------------------END INITIAL STATE----------------------------
+        if(this.state.endGame !== true){
+            //INITIAL BOARD WITH SPACE SHIPS and other settings
+            this.showElement('jetFighter',this.state.jet.x, this.state.jet.y); //SHOW JET
+            //Activate Stering jetfighter
+            document.addEventListener('keydown', (event) =>{
+                this.steringJet(event);
+            });
+            this.timeoutId = setTimeout(()=>{
+                this.showElement('alien',this.state.alien.x, this.state.alien.y);  //SHOW ALIEN
+            },10);
+            //------------------------------END INITIAL STATE----------------------------
 
 
-        //START MOVING ALIEN SHIP
-        this.startGame();
+            //START MOVING ALIEN SHIP
+            this.idSetInterval = setInterval(()=>{
+                this.startAliens();
+                this.showElement('jetFighter',this.state.jet.x, this.state.jet.y); //SHOW JET
+                if(this.state.alien.y === 11){
+                    this.setState({
+                        alien:{
+                            x: Math.floor(Math.random() * 11),
+                            y: 0,
+                        }
+                    });
+                }
+            },3000);
 
-        //Stering jetfighter
-        document.addEventListener('keydown', (event) =>{
-            this.steringJet(event);
-        });
-        document.addEventListener('keydown', (event) =>{
-            this.fireMissleJet(event);
-        });
+
+
+
+
+            
+        }
     }
 
     componentWillUnmount(){
@@ -232,15 +246,20 @@ document.addEventListener('DOMContentLoaded', function(){
     }
 
     render(){
-        return (
-            <div>
-              <Score score={this.state.score}/>
-              <section id='board'>
-                {this.state.board}
-              </section>
-              <Over/>
-            </div>
-        );
+        if(this.state.endGame === false){
+            return (
+                <div>
+                  <Score score={this.state.score}/>
+                  <section id='board'>
+                    {this.state.board}
+                  </section>
+                </div>
+            );
+        }
+        else {
+            return <EndGame score={this.state.score}/>
+        }
+
     }
   }
 
@@ -262,15 +281,17 @@ document.addEventListener('DOMContentLoaded', function(){
 
 
 
-    class Over extends React.Component {
+
+    class EndGame extends React.Component {
         render() {
             return (
-                <section id='over' className='invisible'>
-                </section>
+                <div>
+                    <h1 style={{color:'white', marginTop: '300px', textAlign:'center', fontSize:'46px'}}>Game over</h1>;
+                        <h2 style={{color:'white',textAlign:'center'}}>SCORE: {this.props.score}</h2>
+                </div>
             );
         }
     }
-
 
 
 
