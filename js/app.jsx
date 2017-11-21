@@ -97,7 +97,7 @@ document.addEventListener('DOMContentLoaded', function(){
                     clearInterval(this.missleInterval);
                 }
             }
-        },500);
+        },200);
     }
 
 
@@ -112,8 +112,12 @@ document.addEventListener('DOMContentLoaded', function(){
                 alien: {
                     x:Math.floor(Math.random() * 11),
                     y:0
-                }
+                },
+                text: 'Yeah ..!!! Alien ship destroyed !'
             });
+            this.messageInterval = setTimeout(()=>{
+                this.setState({ text: ''});
+            },1500);
 
             return true;
         } else {
@@ -206,6 +210,12 @@ document.addEventListener('DOMContentLoaded', function(){
                 if(this.state.fire === false){
                     this.showElement('fireMissle',this.state.jet.x, this.state.jet.y-1); //SHOW MISSLE
                     this.moveMissle(this.state.jet.x, this.state.jet.y-1);
+                    this.setState({
+                        text: 'Firing Missle !'
+                    });
+                    this.messageInterval = setTimeout(()=>{
+                        this.setState({ text: ''});
+                    },1500);
                 }
                 break;
         }
@@ -218,14 +228,23 @@ document.addEventListener('DOMContentLoaded', function(){
         //With Jet Figter
         if(this.state.jet.x === this.state.alien.x && this.state.jet.y === this.state.alien.y){
             let space = this;
+            this.showElement('',this.state.jet.x, this.state.jet.y); //SHOW JET
             this.setState({
                 countDownToEnd: this.state.countDownToEnd - 1,
                 text: 'Damn ! We were hitted ! Hold on !',
                 jet: {
                     x: 5,
                     y: 10
+                },
+                score: this.state.score + 100,
+                hitted: this.state.hitted + 1,
+                alien: {
+                    x:Math.floor(Math.random() * 11),
+                    y:0
                 }
             });
+            clearInterval(this.alienIdSetInterval);
+            this.showElement('',this.state.alien.x, this.state.alien.y);  //HIDE ALIEN
             this.messageInterval = setTimeout(()=>{
                 this.setState({ text: ''});
             },1500);
@@ -245,6 +264,7 @@ document.addEventListener('DOMContentLoaded', function(){
     startAliens = () => {
         let gameSpace = this;
         this.alienIdSetInterval = setInterval(()=>{
+            this.showElement('jetFighter',this.state.jet.x, this.state.jet.y); //SHOW JET
             gameSpace.moveAlien();
             this.setState({
                 score: this.state.score + 10
@@ -252,7 +272,7 @@ document.addEventListener('DOMContentLoaded', function(){
             if(this.state.alien.y === 11){
                 clearInterval(this.alienIdSetInterval);
             }
-        },250);
+        },200);
     }
 
 
@@ -312,7 +332,7 @@ document.addEventListener('DOMContentLoaded', function(){
         if(this.state.endGame === false){
             return (
                 <div>
-                  <Score score={this.state.score} hitted={this.state.hitted}/>
+                  <Score score={this.state.score} hitted={this.state.hitted} jets={this.state.countDownToEnd}/>
                   <section id='board'>
                     {this.state.board}
                   </section>
@@ -354,9 +374,11 @@ document.addEventListener('DOMContentLoaded', function(){
                 <section id='score'>
                   <div>
                     SCORE:
-                  <strong>{this.props.score}</strong> <br/>
+                    <strong>{this.props.score}</strong> <br/>
                     HITTED:
-                  <strong>{this.props.hitted}</strong>
+                    <strong>{this.props.hitted}</strong> <br/>
+                    JETFIGHTERS:
+                    <strong>{this.props.jets}</strong> 
                   </div>
                 </section>
             );
@@ -372,9 +394,9 @@ document.addEventListener('DOMContentLoaded', function(){
             return (
                 <div>
                     <h1 style={{color:'white', marginTop: '300px', textAlign:'center', fontSize:'46px'}}>Game over</h1>;
-                    <h3 style={{color:'white',textAlign:'center'}}>JET WAS DESTROYED!</h3>
+                    <h3 style={{color:'white',textAlign:'center'}}>JETFIGHTER WAS DESTROYED!</h3>
                     <h2 style={{color:'white',textAlign:'center'}}>SCORE: {this.props.score}</h2>
-                    <h3 style={{color:'white',textAlign:'center'}}>DISTROYED: {this.props.hitted}</h3>
+                    <h3 style={{color:'white',textAlign:'center'}}>DISTROYED SHIPS: {this.props.hitted}</h3>
                 </div>
             );
         }
