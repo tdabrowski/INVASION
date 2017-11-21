@@ -1,5 +1,5 @@
 module.exports	=	{
-	entry:	"./js/furryreact.jsx",
+	entry:	"./js/app.jsx",
 	output:	{filename:"./js/out.js"	},
 	devServer: {
 		inline: true,
