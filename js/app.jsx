@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', function(){
         constructor(){
             this.x = 5;
             this.y = 10;
-            this.direction = "right";
+            this.direction = "up";
         }
     }
 
@@ -27,7 +27,9 @@ document.addEventListener('DOMContentLoaded', function(){
         constructor(props){
             super(props);
             this.state={
+                countDownToEnd:3,
                 endGame: false,
+                text: '',
                 counter: 200,
                 board: [],
                 jet: new JetFighter(),
@@ -98,6 +100,8 @@ document.addEventListener('DOMContentLoaded', function(){
                     y: this.state.alien.y + 1,
                 }
             });
+            //colisionDetection
+            this.colisionDetection();
             this.showElement('alien',this.state.alien.x, this.state.alien.y); //SHOW ALIEN
         }
         else if (this.state.alien.y === 10){
@@ -177,17 +181,45 @@ document.addEventListener('DOMContentLoaded', function(){
 
 
 
+    //Colision detection with space ship
+    colisionDetection = () => {
+        if(this.state.jet.x === this.state.alien.x && this.state.jet.y === this.state.alien.y){
+            console.log('Damn ! We were hitted !');
+            console.log(this.state.countDownToEnd);
+            let space = this;
+            this.setState({
+                countDownToEnd: this.state.countDownToEnd - 1,
+                text: 'Damn ! We were hitted ! Hold on !',
+                jet: {
+                    x: 5,
+                    y: 10
+                }
+            });
+            this.messageInterval = setTimeout(()=>{
+                this.setState({ text: ''});
+            },1500);
+            if(this.state.countDownToEnd === 0){
+                console.log('End of game ! We were killed');
+                clearInterval(this.alienIdSetInterval);
+                clearInterval(this.startGameIntervalId);
+                this.setState({
+                    endGame: true
+                });
+            }
+        }
+    }
+
 
 
     startAliens = () => {
         let gameSpace = this;
-        this.idSetInterval = setInterval(()=>{
+        this.alienIdSetInterval = setInterval(()=>{
             gameSpace.moveAlien();
             this.setState({
                 score: this.state.score + 10
             });
             if(this.state.alien.y === 11){
-                clearInterval(this.idSetInterval);
+                clearInterval(this.alienIdSetInterval);
             }
         },250);
     }
@@ -209,7 +241,7 @@ document.addEventListener('DOMContentLoaded', function(){
 
 
             //START MOVING ALIEN SHIP
-            this.idSetInterval = setInterval(()=>{
+            this.startGameIntervalId = setInterval(()=>{
                 this.startAliens();
                 this.showElement('jetFighter',this.state.jet.x, this.state.jet.y); //SHOW JET
                 if(this.state.alien.y === 11){
@@ -226,7 +258,7 @@ document.addEventListener('DOMContentLoaded', function(){
 
 
 
-            
+
         }
     }
 
@@ -253,6 +285,7 @@ document.addEventListener('DOMContentLoaded', function(){
                   <section id='board'>
                     {this.state.board}
                   </section>
+                  <MessageWindow text={this.state.text}/>
                 </div>
             );
         }
@@ -263,6 +296,25 @@ document.addEventListener('DOMContentLoaded', function(){
     }
   }
 
+
+    class MessageWindow extends React.Component{
+        render(){
+            const styles={
+                display: 'flex',
+                flexDirection: 'column',
+                aligneItems: 'center',
+                justifyContent: 'center',
+                width: '704px',
+                height: '40px',
+                margin: '1em auto'
+            }
+            return (
+                <div style={styles}>
+                    <h2 style={{color:'white', textAlign:'center', display:'inline-block'}}>{this.props.text}</h2>
+                </div>
+            );
+        }
+    }
 
 
     class Score extends React.Component {
