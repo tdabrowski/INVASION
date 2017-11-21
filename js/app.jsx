@@ -27,14 +27,15 @@ document.addEventListener('DOMContentLoaded', function(){
         constructor(props){
             super(props);
             this.state={
-                countDownToEnd:3,
+                countDownToEnd:3,       //player jet lives (substracted by one when hitted)
                 endGame: false,
-                text: '',
-                counter: 200,
-                board: [],
-                jet: new JetFighter(),
-                alien: new Alien(),
-                score: 0,
+                text: '',       //text message for player when hitted
+                counter: 200,   //key id start number for new elements
+                board: [],          //board for the game (grid with divs)
+                jet: new JetFighter(),    //jet fighter
+                alien: new Alien(),         //alien spaceship
+                score: 0,                   //player score (+10 for fly one grid element and +100 for hitting alien)
+                hitted: 0,              //hitted aliens by missle
                 fire: false   //spacebar - missle don't fired
             };
         }
@@ -74,20 +75,51 @@ document.addEventListener('DOMContentLoaded', function(){
             fire:true
         });
         this.missleInterval = setInterval(()=>{
-            space.showElement('',misslePositionX, misslePositionY);  //HIDE MISSLE
-            misslePositionY = misslePositionY - 1;
-            if(misslePositionY !== -1){
-                space.showElement('fireMissle',misslePositionX, misslePositionY);  //SHOW MISSLE
-            }
-            if(misslePositionY < 0){
+            if(space.checkIfEnemyHitted(misslePositionX,misslePositionY) === true){
+                console.log('hitted when moving');
+                //space.showElement('',misslePositionX, misslePositionY);  //HIDE MISSLE
                 space.setState({
                     fire:false
                 });
                 clearInterval(this.missleInterval);
+
+            }
+            else {
+                space.showElement('',misslePositionX, misslePositionY);  //HIDE MISSLE
+                misslePositionY = misslePositionY - 1;
+                if(misslePositionY !== -1){
+                    space.showElement('fireMissle',misslePositionX, misslePositionY);  //SHOW MISSLE
+                }
+                if(misslePositionY < 0){
+                    space.setState({
+                        fire:false
+                    });
+                    clearInterval(this.missleInterval);
+                }
             }
         },500);
     }
 
+
+    checkIfEnemyHitted = (positionX,positionY) => {
+        if(this.state.alien.x === positionX && this.state.alien.y === positionY){
+            console.log('hitted by missle !');
+            clearInterval(this.alienIdSetInterval);
+            this.showElement('',this.state.alien.x, this.state.alien.y);  //HIDE ALIEN
+            this.setState({
+                score: this.state.score + 100,
+                hitted: this.state.hitted + 1,
+                alien: {
+                    x:Math.floor(Math.random() * 11),
+                    y:0
+                }
+            });
+
+            return true;
+        } else {
+            return false;
+        }
+    }
 
 
     //Move Alien down in the board
@@ -101,7 +133,7 @@ document.addEventListener('DOMContentLoaded', function(){
                 }
             });
             //colisionDetection
-            this.colisionDetection();
+            this.colisionDetection();  //Colision Detection with Jet Fighter
             this.showElement('alien',this.state.alien.x, this.state.alien.y); //SHOW ALIEN
         }
         else if (this.state.alien.y === 10){
@@ -183,9 +215,8 @@ document.addEventListener('DOMContentLoaded', function(){
 
     //Colision detection with space ship
     colisionDetection = () => {
+        //With Jet Figter
         if(this.state.jet.x === this.state.alien.x && this.state.jet.y === this.state.alien.y){
-            console.log('Damn ! We were hitted !');
-            console.log(this.state.countDownToEnd);
             let space = this;
             this.setState({
                 countDownToEnd: this.state.countDownToEnd - 1,
@@ -281,7 +312,7 @@ document.addEventListener('DOMContentLoaded', function(){
         if(this.state.endGame === false){
             return (
                 <div>
-                  <Score score={this.state.score}/>
+                  <Score score={this.state.score} hitted={this.state.hitted}/>
                   <section id='board'>
                     {this.state.board}
                   </section>
@@ -290,7 +321,7 @@ document.addEventListener('DOMContentLoaded', function(){
             );
         }
         else {
-            return <EndGame score={this.state.score}/>
+            return <EndGame score={this.state.score} hitted={this.state.hitted}/>
         }
 
     }
@@ -322,8 +353,10 @@ document.addEventListener('DOMContentLoaded', function(){
             return (
                 <section id='score'>
                   <div>
-                    SCORE<br/>
-                  <strong>{this.props.score}</strong>
+                    SCORE:
+                  <strong>{this.props.score}</strong> <br/>
+                    HITTED:
+                  <strong>{this.props.hitted}</strong>
                   </div>
                 </section>
             );
@@ -339,7 +372,9 @@ document.addEventListener('DOMContentLoaded', function(){
             return (
                 <div>
                     <h1 style={{color:'white', marginTop: '300px', textAlign:'center', fontSize:'46px'}}>Game over</h1>;
-                        <h2 style={{color:'white',textAlign:'center'}}>SCORE: {this.props.score}</h2>
+                    <h3 style={{color:'white',textAlign:'center'}}>JET WAS DESTROYED!</h3>
+                    <h2 style={{color:'white',textAlign:'center'}}>SCORE: {this.props.score}</h2>
+                    <h3 style={{color:'white',textAlign:'center'}}>DISTROYED: {this.props.hitted}</h3>
                 </div>
             );
         }
