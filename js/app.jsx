@@ -14,8 +14,6 @@ document.addEventListener('DOMContentLoaded', function(){
 
     class Alien{
         constructor(){
-            //this.x = Math.floor(Math.random() * 10);
-            //this.y = Math.floor(Math.random() * 10);
             this.x = Math.floor(Math.random() * 11);
             this.y = 0;
         }
@@ -34,6 +32,8 @@ document.addEventListener('DOMContentLoaded', function(){
                 board: [],          //board for the game (grid with divs)
                 jet: new JetFighter(),    //jet fighter
                 alien: new Alien(),         //alien spaceship
+                alien2: new Alien(),
+                alien3: new Alien(),
                 score: 0,                   //player score (+10 for fly one grid element and +100 for hitting alien)
                 hitted: 0,              //hitted aliens by missle
                 fire: false,   //spacebar - missle don't fired
@@ -120,6 +120,26 @@ document.addEventListener('DOMContentLoaded', function(){
             },1500);
 
             return true;
+        }
+        else if (this.state.alien2.x === positionX && this.state.alien2.y === positionY){
+            console.log('hitted by missle alien2 !');
+            clearInterval(this.alien2IdSetInterval);
+            this.showElement('',this.state.alien2.x, this.state.alien2.y);  //HIDE ALIEN
+            this.setState({
+                score: this.state.score + 100,
+                hitted: this.state.hitted + 1,
+                alien2: {
+                    x:Math.floor(Math.random() * 11),
+                    y:0
+                },
+                text: 'Yeah ..!!! Alien ship destroyed !'
+            });
+            this.messageInterval = setTimeout(()=>{
+                this.setState({ text: ''});
+            },1500);
+
+            return true;
+
         } else {
             return false;
         }
@@ -137,7 +157,8 @@ document.addEventListener('DOMContentLoaded', function(){
                 }
             });
             //colisionDetection
-            this.colisionDetection();  //Colision Detection with Jet Fighter
+            //this.colisionDetection();  //Colision Detection with Jet Fighter
+            this.colisionDetectionUniversal(this.state.alien.x, this.state.alien.y, this.resetAlien, this.alienIdSetInterval);
             this.showElement('alien',this.state.alien.x, this.state.alien.y); //SHOW ALIEN
         }
         else if (this.state.alien.y === 10){
@@ -146,6 +167,33 @@ document.addEventListener('DOMContentLoaded', function(){
                 alien:{
                     x: this.state.alien.x,
                     y: this.state.alien.y + 1,
+                }
+            });
+        }
+    }
+
+
+    //Move Alien2 down in the board
+    moveAlien2 = () =>{
+        if(this.state.alien2.y < 10){
+            this.showElement('',this.state.alien2.x, this.state.alien2.y);  //Hide ALIEN
+            this.setState({
+                alien2:{
+                    x: this.state.alien2.x,
+                    y: this.state.alien2.y + 1,
+                }
+            });
+            //colisionDetection
+            //this.colisionDetection();  //Colision Detection with Jet Fighter
+            this.colisionDetectionUniversal(this.state.alien2.x, this.state.alien2.y, this.resetAlien2, this.alien2IdSetInterval);  //ALIEN2
+            this.showElement('alien',this.state.alien2.x, this.state.alien2.y); //SHOW ALIEN
+        }
+        else if (this.state.alien2.y === 10){
+            this.showElement('',this.state.alien2.x, this.state.alien2.y);  //HIDE ALIEN
+            this.setState({
+                alien2:{
+                    x: this.state.alien2.x,
+                    y: this.state.alien2.y + 1,
                 }
             });
         }
@@ -223,10 +271,16 @@ document.addEventListener('DOMContentLoaded', function(){
 
 
 
+    //Universal collision Detection with space Ship
     //Colision detection with space ship
-    colisionDetection = () => {
+    //reset -- it is a reset position funciton for alien ship (y=random,x=0)
+    //colisionDetectionUniversal(this.state.alien.x, this.state.alien.y, resetAlien, this.alienIdSetInterval)
+    //Example:
+    //this.colisionDetectionUniversal(this.state.alien.x, this.state.alien.y, this.resetAlien, this.alienIdSetInterval);   //ALIEN collision Detection
+    //this.colisionDetectionUniversal(this.state.alien2.x, this.state.alien2.y, this.resetAlien2, this.alien2IdSetInterval);  //ALIEN2
+    colisionDetectionUniversal = (positionAlienX,positionAlienY,reset,alienTimeId) => {
         //With Jet Figter
-        if(this.state.jet.x === this.state.alien.x && this.state.jet.y === this.state.alien.y){
+        if(this.state.jet.x === positionAlienX && this.state.jet.y === positionAlienY){
             let space = this;
             this.showElement('',this.state.jet.x, this.state.jet.y); //SHOW JET
             this.setState({
@@ -238,19 +292,17 @@ document.addEventListener('DOMContentLoaded', function(){
                 },
                 score: this.state.score + 100,
                 hitted: this.state.hitted + 1,
-                alien: {
-                    x:Math.floor(Math.random() * 11),
-                    y:0
-                }
             });
-            clearInterval(this.alienIdSetInterval);
-            this.showElement('',this.state.alien.x, this.state.alien.y);  //HIDE ALIEN
+            reset(); //RESET ALIEN POSITION ON BOARD
+            clearInterval(alienTimeId);
+            this.showElement('',positionAlienX, positionAlienY);  //HIDE ALIEN
             this.messageInterval = setTimeout(()=>{
                 this.setState({ text: ''});
             },1500);
             if(this.state.countDownToEnd === 0){
                 console.log('End of game ! We were killed');
                 clearInterval(this.alienIdSetInterval);
+                clearInterval(this.alien2IdSetInterval);
                 clearInterval(this.startGameIntervalId);
                 this.setState({
                     endGame: true
@@ -259,6 +311,35 @@ document.addEventListener('DOMContentLoaded', function(){
         }
     }
 
+    //reset Alien Position
+    resetAlien = () => {
+        this.setState({
+            alien: {
+                x:Math.floor(Math.random() * 11),
+                y:0
+            }
+        });
+    }
+
+    //reset Alien Position
+    resetAlien2 = () => {
+        this.setState({
+            alien2: {
+                x:Math.floor(Math.random() * 11),
+                y:0
+            }
+        });
+    }
+
+    //reset Alien Position
+    resetAlien3 = () => {
+        this.setState({
+            alien3: {
+                x:Math.floor(Math.random() * 11),
+                y:0
+            }
+        });
+    }
 
 
 
@@ -267,11 +348,26 @@ document.addEventListener('DOMContentLoaded', function(){
         this.alienIdSetInterval = setInterval(()=>{
             this.showElement('jetFighter',this.state.jet.x, this.state.jet.y); //SHOW JET
             gameSpace.moveAlien();
-            this.setState({
+            /*this.setState({
                 score: this.state.score + 10
-            });
+            });*/
             if(this.state.alien.y === 11){
                 clearInterval(this.alienIdSetInterval);
+            }
+        },200);
+    }
+
+
+    startAlien2 = () => {
+        let gameSpace = this;
+        this.alien2IdSetInterval = setInterval(()=>{
+            this.showElement('jetFighter',this.state.jet.x, this.state.jet.y); //SHOW JET
+            gameSpace.moveAlien2();
+            /*this.setState({
+                score: this.state.score + 10
+            });*/
+            if(this.state.alien2.y === 11){
+                clearInterval(this.alien2IdSetInterval);
             }
         },200);
     }
@@ -286,15 +382,18 @@ document.addEventListener('DOMContentLoaded', function(){
             document.addEventListener('keydown', (event) =>{
                 this.steringJet(event);
             });
-            this.timeoutId = setTimeout(()=>{
-                this.showElement('alien',this.state.alien.x, this.state.alien.y);  //SHOW ALIEN
-            },10);
             //------------------------------END INITIAL STATE----------------------------
 
 
             //START MOVING ALIEN SHIP
             this.startGameIntervalId = setInterval(()=>{
-                this.startAliens();
+                this.startAliens();     //FIRST ALIEN START
+
+                this.timeIntervalAlien2 = setTimeout(()=>{  //SECOND ALIEN START
+                    this.startAlien2();
+                },1000);
+                //this.startAlien2();
+
                 this.showElement('jetFighter',this.state.jet.x, this.state.jet.y); //SHOW JET
                 if(this.state.alien.y === 11){
                     this.setState({
@@ -304,9 +403,12 @@ document.addEventListener('DOMContentLoaded', function(){
                         }
                     });
                 }
+                if(this.state.alien2.y === 11){
+                    this.resetAlien2();
+                }
             },3000);
 
-        
+
 
 
 
