@@ -26,7 +26,9 @@ document.addEventListener('DOMContentLoaded', function(){
             super(props);
             this.state={
                 countDownToEnd:3,       //player jet lives (substracted by one when hitted)
+                missedAliens:0,         // if number of missed aliens will be greater than 10 player will lose game
                 endGame: false,
+                endMessage: '',
                 text: '',       //text message for player when hitted
                 counter: 200,   //key id start number for new elements
                 board: [],          //board for the game (grid with divs)
@@ -97,10 +99,10 @@ document.addEventListener('DOMContentLoaded', function(){
                     clearInterval(this.missleInterval);
                 }
             }
-        },50);
+        },30);
     }
 
-
+    //checking if enemy alien ship was hitted by missle
     checkIfEnemyHitted = (positionX,positionY) => {
         if(this.state.alien.x === positionX && this.state.alien.y === positionY){
             console.log('hitted by missle !');
@@ -115,6 +117,7 @@ document.addEventListener('DOMContentLoaded', function(){
                 },
                 text: 'Yeah ..!!! Alien ship destroyed !'
             });
+            this.winningGame();  //CHECK IF PLAYER WIN GAME
             this.messageInterval = setTimeout(()=>{
                 this.setState({ text: ''});
             },1500);
@@ -134,6 +137,7 @@ document.addEventListener('DOMContentLoaded', function(){
                 },
                 text: 'Yeah ..!!! Alien ship destroyed !'
             });
+            this.winningGame();  //CHECK IF PLAYER WIN GAME
             this.messageInterval = setTimeout(()=>{
                 this.setState({ text: ''});
             },1500);
@@ -153,6 +157,7 @@ document.addEventListener('DOMContentLoaded', function(){
                 },
                 text: 'Yeah ..!!! Alien ship destroyed !'
             });
+            this.winningGame();  //CHECK IF PLAYER WIN GAME
             this.messageInterval = setTimeout(()=>{
                 this.setState({ text: ''});
             },1500);
@@ -164,7 +169,7 @@ document.addEventListener('DOMContentLoaded', function(){
     }
 
 
-    //Move Alien down in the board
+    //Move Alien1 down in the board
     moveAlien = () =>{
         if(this.state.alien.y < 10){
             this.showElement('',this.state.alien.x, this.state.alien.y);  //Hide ALIEN
@@ -174,8 +179,6 @@ document.addEventListener('DOMContentLoaded', function(){
                     y: this.state.alien.y + 1,
                 }
             });
-            //colisionDetection
-            //this.colisionDetection();  //Colision Detection with Jet Fighter
             this.colisionDetectionUniversal(this.state.alien.x, this.state.alien.y, this.resetAlien, this.alienIdSetInterval);
             this.showElement('alien',this.state.alien.x, this.state.alien.y); //SHOW ALIEN
         }
@@ -250,22 +253,32 @@ document.addEventListener('DOMContentLoaded', function(){
 
 
     ///---------------------------------------------------------------------------
-    //Move Alien Universal
-    //moveAlienUniversal(this.state.alien2.x,this.state.alien2.y,this.resetAlien2,this.alien2IdSetInterval);
-    moveAlienUniversal = (positionAlienX,positionAlienY,reset,alienIntervalId) =>{
+    //Move Alien Universal  --- nie dziala czyszczenie poprzedniego statku
+    //moveAlienUniversal(this.state.alien3.x,this.state.alien3.y,this.changeAlien3State,this.resetAlien3,this.alien3IdSetInterval);
+    moveAlienUniversal = (positionAlienX,positionAlienY,changeAlien,reset,alienIntervalId) =>{
         if(positionAlienY < 10){
             this.showElement('',positionAlienX, positionAlienY);  //Hide ALIEN
-            reset();  //RESET ALIEN POSITION
+            changeAlien(); //INCREMENT ALIEN POSITION Y
             //colisionDetection
-            //this.colisionDetection();  //Colision Detection with Jet Fighter
             this.colisionDetectionUniversal(positionAlienX, positionAlienY, reset, alienIntervalId);  //ALIEN2
             this.showElement('alien',positionAlienX, positionAlienY); //SHOW ALIEN
         }
         else if (positionAlienY === 10){
             this.showElement('',positionAlienX, positionAlienY);  //HIDE ALIEN
-            reset(); //RESET ALIEN POSITION
+            changeAlien(); //INCREMENT ALIEN POSITION Y
         }
     }
+
+    //Change Alien3 state - increment position 1
+    changeAlien3State = () =>{
+        this.setState({
+            alien3:{
+                x: this.state.alien3.x,
+                y: this.state.alien3.y + 1,
+            }
+        });
+    }
+
     //------------------------------------------------------------------------------
 
 
@@ -363,6 +376,7 @@ document.addEventListener('DOMContentLoaded', function(){
                 score: this.state.score + 100,
                 hitted: this.state.hitted + 1,
             });
+            this.winningGame();  //CHECK IF PLAYER WIN GAME
             reset(); //RESET ALIEN POSITION ON BOARD
             clearInterval(alienTimeId);
             this.showElement('',positionAlienX, positionAlienY);  //HIDE ALIEN
@@ -376,13 +390,14 @@ document.addEventListener('DOMContentLoaded', function(){
                 clearInterval(this.alien3IdSetInterval);
                 clearInterval(this.startGameIntervalId);
                 this.setState({
+                    endMessage : 'JETFIGHTER WAS DESTROYED!',
                     endGame: true
                 });
             }
         }
     }
 
-    //reset Alien Position
+    //reset Alien1 Position
     resetAlien = () => {
         this.setState({
             alien: {
@@ -392,7 +407,7 @@ document.addEventListener('DOMContentLoaded', function(){
         });
     }
 
-    //reset Alien Position
+    //reset Alien2 Position
     resetAlien2 = () => {
         this.setState({
             alien2: {
@@ -402,7 +417,7 @@ document.addEventListener('DOMContentLoaded', function(){
         });
     }
 
-    //reset Alien Position
+    //reset Alien3 Position
     resetAlien3 = () => {
         this.setState({
             alien3: {
@@ -413,15 +428,12 @@ document.addEventListener('DOMContentLoaded', function(){
     }
 
 
-
+    //Set timer for Alien1 - starting Alien1 on board
     startAliens = () => {
         let gameSpace = this;
         this.alienIdSetInterval = setInterval(()=>{
             this.showElement('jetFighter',this.state.jet.x, this.state.jet.y); //SHOW JET
             gameSpace.moveAlien();
-            /*this.setState({
-                score: this.state.score + 10
-            });*/
             if(this.state.alien.y === 11){
                 clearInterval(this.alienIdSetInterval);
             }
@@ -429,14 +441,12 @@ document.addEventListener('DOMContentLoaded', function(){
     }
 
 
+    //Set timer for Alien2 - starting Alien2 on board
     startAlien2 = () => {
         let gameSpace = this;
         this.alien2IdSetInterval = setInterval(()=>{
             this.showElement('jetFighter',this.state.jet.x, this.state.jet.y); //SHOW JET
             gameSpace.moveAlien2();
-            /*this.setState({
-                score: this.state.score + 10
-            });*/
             if(this.state.alien2.y === 11){
                 clearInterval(this.alien2IdSetInterval);
             }
@@ -444,21 +454,49 @@ document.addEventListener('DOMContentLoaded', function(){
     }
 
 
+    //Set timer for Alien3 - starting Alien3 on board
     startAlien3 = () => {
         let gameSpace = this;
         this.alien3IdSetInterval = setInterval(()=>{
             this.showElement('jetFighter',this.state.jet.x, this.state.jet.y); //SHOW JET
-            //gameSpace.moveAlienUniversal(this.state.alien3.x,this.state.alien3.y,this.resetAlien3,this.alien3IdSetInterval);
             gameSpace.moveAlien3();
-            /*this.setState({
-                score: this.state.score + 10
-            });*/
             if(this.state.alien3.y === 11){
                 clearInterval(this.alien3IdSetInterval);
             }
         },200);
     }
 
+
+    //END of GAME  first condition - player will lose game when missed aliens number will be greater or equal 10
+    actualizeMissedAliens = () => {
+        this.setState({
+            missedAliens: this.state.missedAliens + 1
+        });
+        if(this.state.missedAliens >= 10){
+            clearInterval(this.alienIdSetInterval);
+            clearInterval(this.alien2IdSetInterval);
+            clearInterval(this.alien3IdSetInterval);
+            clearInterval(this.startGameIntervalId);
+            this.setState({
+                endMessage: 'YOU MISSED TOO MUCH ALIEN SHIPS. YOUR PLANET WILL BE DESTROYED !',
+                endGame: true
+            });
+        }
+    }
+
+    winningGame = () => {
+        if (this.state.hitted >= 200){
+            console.log('End of game ! You are winner !');
+            clearInterval(this.alienIdSetInterval);
+            clearInterval(this.alien2IdSetInterval);
+            clearInterval(this.alien3IdSetInterval);
+            clearInterval(this.startGameIntervalId);
+            this.setState({
+                endMessage: 'GRATULATIONS ! YOU DIFFEND YOUR PLANET ! ALIENS WILL NOT COME BACK SOON !',
+                endGame: true
+            });
+        }
+    }
 
     componentDidMount(){
         if(this.state.endGame !== true){
@@ -471,8 +509,9 @@ document.addEventListener('DOMContentLoaded', function(){
             //------------------------------END INITIAL STATE----------------------------
 
 
-            //START MOVING ALIEN SHIP
+            //START MOVING ALIENS SHIPS
             this.startGameIntervalId = setInterval(()=>{
+
                 this.startAliens();     //FIRST ALIEN START
 
                 this.timeIntervalAlien2 = setTimeout(()=>{  //SECOND ALIEN START
@@ -481,23 +520,21 @@ document.addEventListener('DOMContentLoaded', function(){
 
                 this.timeIntervalAlien3 = setTimeout(()=>{  //THIRD ALIEN START
                     this.startAlien3();
-                },122000);
-                //this.startAlien2();
+                },121500);
 
+                //ACTUALIZE JET FIGTER VIEW
                 this.showElement('jetFighter',this.state.jet.x, this.state.jet.y); //SHOW JET
                 if(this.state.alien.y === 11){
-                    this.setState({
-                        alien:{
-                            x: Math.floor(Math.random() * 11),
-                            y: 0,
-                        }
-                    });
+                    this.resetAlien();
+                    this.actualizeMissedAliens();
                 }
                 if(this.state.alien2.y === 11){
                     this.resetAlien2();
+                    this.actualizeMissedAliens();
                 }
                 if(this.state.alien3.y === 11){
                     this.resetAlien3();
+                    this.actualizeMissedAliens();
                 }
             },3000);
 
@@ -506,6 +543,10 @@ document.addEventListener('DOMContentLoaded', function(){
 
     componentWillUnmount(){
         clearInterval(this.idSetInterval);
+        clearInterval(this.alienIdSetInterval);
+        clearInterval(this.alien2IdSetInterval);
+        clearInterval(this.alien3IdSetInterval);
+        clearInterval(this.startGameIntervalId);
     }
 
 
@@ -523,7 +564,7 @@ document.addEventListener('DOMContentLoaded', function(){
         if(this.state.endGame === false){
             return (
                 <div>
-                  <Score score={this.state.score} hitted={this.state.hitted} jets={this.state.countDownToEnd}/>
+                  <Score score={this.state.score} hitted={this.state.hitted} jets={this.state.countDownToEnd} missedAliens={this.state.missedAliens}/>
                   <section id='board'>
                     {this.state.board}
                   </section>
@@ -532,7 +573,7 @@ document.addEventListener('DOMContentLoaded', function(){
             );
         }
         else {
-            return <EndGame score={this.state.score} hitted={this.state.hitted}/>
+            return <EndGame score={this.state.score} hitted={this.state.hitted} endMessage={this.state.endMessage}/>
         }
 
     }
@@ -565,11 +606,13 @@ document.addEventListener('DOMContentLoaded', function(){
                 <section id='score'>
                   <div>
                     SCORE:
-                    <strong>{this.props.score}</strong> <br/>
+                    <strong>{this.props.score}</strong><br/>
                     HITTED:
-                    <strong>{this.props.hitted}</strong> <br/>
+                    <strong>{this.props.hitted}</strong><br/>
                     JETFIGHTERS:
-                    <strong>{this.props.jets}</strong>
+                    <strong>{this.props.jets}</strong><br/>
+                    MISSED ALIENS:
+                    <strong>{this.props.missedAliens}</strong>
                   </div>
                 </section>
             );
@@ -585,7 +628,7 @@ document.addEventListener('DOMContentLoaded', function(){
             return (
                 <div>
                     <h1 style={{color:'white', marginTop: '300px', textAlign:'center', fontSize:'46px'}}>Game over</h1>;
-                    <h3 style={{color:'white',textAlign:'center'}}>JETFIGHTER WAS DESTROYED!</h3>
+                    <h3 style={{color:'white',textAlign:'center'}}>{this.props.endMessage}</h3>
                     <h2 style={{color:'white',textAlign:'center'}}>SCORE: {this.props.score}</h2>
                     <h3 style={{color:'white',textAlign:'center'}}>DISTROYED SHIPS: {this.props.hitted}</h3>
                 </div>
