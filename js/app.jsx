@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', function(){
         constructor(props){
             super(props);
             this.state={
-                countDownToEnd:3,       //player jet lives (substracted by one when hitted)
+                countDownToEnd:5,       //player jet lives (substracted by one when hitted)
                 missedAliens:0,         // if number of missed aliens will be greater than 10 player will lose game
                 endGame: false,             // state of all game
                 endMessage: '',         //Message on end game panel
@@ -452,6 +452,7 @@ document.addEventListener('DOMContentLoaded', function(){
                 clearInterval(this.alien2IdSetInterval);
             }
         },200);
+        return true;
     }
 
 
@@ -465,6 +466,7 @@ document.addEventListener('DOMContentLoaded', function(){
                 clearInterval(this.alien3IdSetInterval);
             }
         },200);
+        return true;
     }
 
 
@@ -473,7 +475,7 @@ document.addEventListener('DOMContentLoaded', function(){
         this.setState({
             missedAliens: this.state.missedAliens + 1
         });
-        if(this.state.missedAliens >= 10){
+        if(this.state.missedAliens >= 15){
             clearInterval(this.alienIdSetInterval);
             clearInterval(this.alien2IdSetInterval);
             clearInterval(this.alien3IdSetInterval);
@@ -488,23 +490,21 @@ document.addEventListener('DOMContentLoaded', function(){
 
     //WINNING GAME CONDITION
     winningGame = () => {
-        if (this.state.hitted >= 200){
+        if (this.state.hitted >= 120){
             console.log('End of game ! You are winner !');
             clearInterval(this.alienIdSetInterval);
             clearInterval(this.alien2IdSetInterval);
             clearInterval(this.alien3IdSetInterval);
             clearInterval(this.startGameIntervalId);
             this.setState({
-                endMessage: 'GRATULATIONS ! YOU DIFFEND YOUR PLANET ! ALIENS WILL NOT COME BACK SOON !',
+                endMessage: 'GRATULATIONS ! YOU CAN BE PROUD YOU HAVE DEFENDED YOUR PLANET ! ALIENS WILL NOT COME BACK SOON !',
                 endGame: true
             });
         }
     }
 
 
-    weaponAlienActivation = () => {
-        this.moveAlienMissle(this.state.alien.x,this.state.alien.y+1);  //FIRE MISSLE FROM ALIEN SPACESHIP
-    }
+
 
     //Move Alien missle down on the board
     //moveAlienMissle(this.state.alien.x,this.state.alien.y)
@@ -514,23 +514,48 @@ document.addEventListener('DOMContentLoaded', function(){
         let missleAPositionY = positionY;
         let missleAPositionX = positionX;
         this.alienMissleInterval = setInterval(()=>{
-
-            if(missleAPositionY < 10){
-                spaceAlien.showElement('',missleAPositionX, missleAPositionY);  //HIDE MISSLE
-                missleAPositionY = missleAPositionY + 1;
-                spaceAlien.showElement('fireMissle',missleAPositionX, missleAPositionY);  //SHOW MISSLE
-                console.log('Missle in board', missleAPositionY);
-            }
-            else if(missleAPositionY >= 10){
-                spaceAlien.showElement('',missleAPositionX, missleAPositionY);  //HIDE MISSLE
-                console.log('Missle cleared', missleAPositionY);
-                missleAPositionY = 0;
+            if(missleAPositionX === this.state.jet.x && missleAPositionY === this.state.jet.y) {
+                console.log('Alien missle hitted JET !!!!');
+                this.showElement('',this.state.jet.x, this.state.jet.y);  //HIDE JET
+                this.setState({
+                    countDownToEnd: this.state.countDownToEnd - 1,
+                    jet: {
+                        x:5,
+                        y:10
+                    },
+                    text: 'SHIT ! WE WERE HIT BY MISSLE !'
+                });
+                this.messageInterval = setTimeout(()=>{
+                    this.setState({ text: ''});
+                },1500);
                 clearInterval(this.alienMissleInterval);
+                //CHECK IF WE HAVE JETS TO FLY
+                if(this.state.countDownToEnd === 0){
+                    console.log('End of game ! We were killed');
+                    clearInterval(this.alienIdSetInterval);
+                    clearInterval(this.alien2IdSetInterval);
+                    clearInterval(this.alien3IdSetInterval);
+                    clearInterval(this.startGameIntervalId);
+                    this.setState({
+                        endMessage : 'JETFIGHTER WAS DESTROYED!',
+                        endGame: true
+                    });
+                }
             }
-        },90);
+            else {
+                if(missleAPositionY < 10){
+                    spaceAlien.showElement('',missleAPositionX, missleAPositionY);  //HIDE MISSLE
+                    missleAPositionY = missleAPositionY + 1;
+                    spaceAlien.showElement('fireMissle',missleAPositionX, missleAPositionY);  //SHOW MISSLE
+                }
+                else if(missleAPositionY >= 10){
+                    spaceAlien.showElement('',missleAPositionX, missleAPositionY);  //HIDE MISSLE
+                    missleAPositionY = 0;
+                    clearInterval(this.alienMissleInterval);
+                }
+            }
+        },70);
     }
-
-
 
 
 
@@ -545,32 +570,20 @@ document.addEventListener('DOMContentLoaded', function(){
             //------------------------------END INITIAL STATE----------------------------
 
 
-            //FIRE ALIEN WEAPON
 
-            /*this.weaponTimeInterval = setInterval(()=>{
-                //this.weaponAlienActivation();
-                this.moveAlienMissle(this.state.alien.x,this.state.alien.y+1);
-                //clearTimeout(this.weaponTimeInterval);
-                console.log('koniec wyswietlania');
-            },3200);*/
 
 
             //START MOVING ALIENS SHIPS
             this.startGameIntervalId = setInterval(()=>{
 
-                if(this.startAliens()){
-                    console.log(this.state.alien.y);
+                if(this.startAliens()){ //FIRST ALIEN START AND ACTIVATE WEAPON
                     this.weaponTimeInterval = setTimeout(()=>{
                         this.moveAlienMissle(this.state.alien.x,this.state.alien.y+1);
                     },100);
                 }
-                //this.startAliens();   //FIRST ALIEN START
-
-
                 this.timeIntervalAlien2 = setTimeout(()=>{  //SECOND ALIEN START
                     this.startAlien2();
                 },61000);
-
                 this.timeIntervalAlien3 = setTimeout(()=>{  //THIRD ALIEN START
                     this.startAlien3();
                 },121500);
