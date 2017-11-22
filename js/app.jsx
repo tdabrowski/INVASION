@@ -79,7 +79,6 @@ document.addEventListener('DOMContentLoaded', function(){
         });
         this.missleInterval = setInterval(()=>{
             if(space.checkIfEnemyHitted(misslePositionX,misslePositionY) === true){
-                console.log('hitted when moving');
                 //space.showElement('',misslePositionX, misslePositionY);  //HIDE MISSLE
                 space.setState({
                     fire:false
@@ -106,7 +105,6 @@ document.addEventListener('DOMContentLoaded', function(){
     //checking if enemy alien ship was hitted by missle
     checkIfEnemyHitted = (positionX,positionY) => {
         if(this.state.alien.x === positionX && this.state.alien.y === positionY){
-            console.log('hitted by missle !');
             clearInterval(this.alienIdSetInterval);
             this.showElement('',this.state.alien.x, this.state.alien.y);  //HIDE ALIEN
             this.setState({
@@ -126,7 +124,6 @@ document.addEventListener('DOMContentLoaded', function(){
             return true;
         }
         else if (this.state.alien2.x === positionX && this.state.alien2.y === positionY){
-            console.log('hitted by missle alien2 !');
             clearInterval(this.alien2IdSetInterval);
             this.showElement('',this.state.alien2.x, this.state.alien2.y);  //HIDE ALIEN
             this.setState({
@@ -146,7 +143,6 @@ document.addEventListener('DOMContentLoaded', function(){
             return true;
         }
         else if (this.state.alien3.x === positionX && this.state.alien3.y === positionY){
-            console.log('hitted by missle alien3 !');
             clearInterval(this.alien3IdSetInterval);
             this.showElement('',this.state.alien3.x, this.state.alien3.y);  //HIDE ALIEN
             this.setState({
@@ -383,7 +379,6 @@ document.addEventListener('DOMContentLoaded', function(){
                 this.setState({ text: ''});
             },1500);
             if(this.state.countDownToEnd === 0){
-                console.log('End of game ! We were killed');
                 clearInterval(this.alienIdSetInterval);
                 clearInterval(this.alien2IdSetInterval);
                 clearInterval(this.alien3IdSetInterval);
@@ -430,7 +425,6 @@ document.addEventListener('DOMContentLoaded', function(){
     //Set timer for Alien1 - starting Alien1 on board
     startAliens = () => {
         let gameSpace = this;
-        console.log('Alien1 startujemy');
         this.alienIdSetInterval = setInterval(()=>{
             this.showElement('jetFighter',this.state.jet.x, this.state.jet.y); //SHOW JET
             gameSpace.moveAlien();
@@ -491,7 +485,6 @@ document.addEventListener('DOMContentLoaded', function(){
     //WINNING GAME CONDITION
     winningGame = () => {
         if (this.state.hitted >= 120){
-            console.log('End of game ! You are winner !');
             clearInterval(this.alienIdSetInterval);
             clearInterval(this.alien2IdSetInterval);
             clearInterval(this.alien3IdSetInterval);
@@ -509,13 +502,11 @@ document.addEventListener('DOMContentLoaded', function(){
     //Move Alien missle down on the board
     //moveAlienMissle(this.state.alien.x,this.state.alien.y)
     moveAlienMissle = (positionX,positionY) =>{
-        console.log('Pocisk wystrzelony');
         let spaceAlien = this;
         let missleAPositionY = positionY;
         let missleAPositionX = positionX;
         this.alienMissleInterval = setInterval(()=>{
             if(missleAPositionX === this.state.jet.x && missleAPositionY === this.state.jet.y) {
-                console.log('Alien missle hitted JET !!!!');
                 this.showElement('',this.state.jet.x, this.state.jet.y);  //HIDE JET
                 this.setState({
                     countDownToEnd: this.state.countDownToEnd - 1,
@@ -531,7 +522,6 @@ document.addEventListener('DOMContentLoaded', function(){
                 clearInterval(this.alienMissleInterval);
                 //CHECK IF WE HAVE JETS TO FLY
                 if(this.state.countDownToEnd === 0){
-                    console.log('End of game ! We were killed');
                     clearInterval(this.alienIdSetInterval);
                     clearInterval(this.alien2IdSetInterval);
                     clearInterval(this.alien3IdSetInterval);
