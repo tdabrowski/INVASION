@@ -27,21 +27,22 @@ document.addEventListener('DOMContentLoaded', function(){
             this.state={
                 countDownToEnd:3,       //player jet lives (substracted by one when hitted)
                 missedAliens:0,         // if number of missed aliens will be greater than 10 player will lose game
-                endGame: false,
-                endMessage: '',
+                endGame: false,             // state of all game
+                endMessage: '',         //Message on end game panel
                 text: '',       //text message for player when hitted
                 counter: 200,   //key id start number for new elements
                 board: [],          //board for the game (grid with divs)
                 jet: new JetFighter(),    //jet fighter
-                alien: new Alien(),         //alien spaceship
-                alien2: new Alien(),
-                alien3: new Alien(),
+                alien: new Alien(),         //first alien spaceship
+                alien2: new Alien(),        //second alien spaceship
+                alien3: new Alien(),        //third alien spaceship
                 score: 0,                   //player score (+10 for fly one grid element and +100 for hitting alien)
                 hitted: 0,              //hitted aliens by missle
                 fire: false,   //spacebar - missle don't fired
             };
         }
 
+    //Position index in board table
     index = (x,y) => {
         return x + (y * 11);
     }
@@ -68,7 +69,7 @@ document.addEventListener('DOMContentLoaded', function(){
 
 
 
-    //Move Jet missle up on the board  --- under construction
+    //Move Jet missle up on the board
     moveMissle = (positionX,positionY) =>{
         let space = this;
         let misslePositionY = positionY;
@@ -205,7 +206,6 @@ document.addEventListener('DOMContentLoaded', function(){
                 }
             });
             //colisionDetection
-            //this.colisionDetection();  //Colision Detection with Jet Fighter
             this.colisionDetectionUniversal(this.state.alien2.x, this.state.alien2.y, this.resetAlien2, this.alien2IdSetInterval);  //ALIEN2
             this.showElement('alien',this.state.alien2.x, this.state.alien2.y); //SHOW ALIEN
         }
@@ -235,7 +235,6 @@ document.addEventListener('DOMContentLoaded', function(){
                 }
             });
             //colisionDetection
-            //this.colisionDetection();  //Colision Detection with Jet Fighter
             this.colisionDetectionUniversal(this.state.alien3.x, this.state.alien3.y, this.resetAlien3, this.alien3IdSetInterval);  //ALIEN2
             this.showElement('alien',this.state.alien3.x, this.state.alien3.y); //SHOW ALIEN
         }
@@ -253,7 +252,7 @@ document.addEventListener('DOMContentLoaded', function(){
 
 
     ///---------------------------------------------------------------------------
-    //Move Alien Universal  --- nie dziala czyszczenie poprzedniego statku
+    //Move Alien Universal  --- nie dziala czyszczenie poprzedniego widoku statku
     //moveAlienUniversal(this.state.alien3.x,this.state.alien3.y,this.changeAlien3State,this.resetAlien3,this.alien3IdSetInterval);
     moveAlienUniversal = (positionAlienX,positionAlienY,changeAlien,reset,alienIntervalId) =>{
         if(positionAlienY < 10){
@@ -282,7 +281,7 @@ document.addEventListener('DOMContentLoaded', function(){
     //------------------------------------------------------------------------------
 
 
-
+    //STERING JET METHOD (KEYBOARD KEY MAPPING)
     steringJet = (event)=> {
         switch (event.which){
             case 37:    //Ster Left
@@ -431,13 +430,15 @@ document.addEventListener('DOMContentLoaded', function(){
     //Set timer for Alien1 - starting Alien1 on board
     startAliens = () => {
         let gameSpace = this;
+        console.log('Alien1 startujemy');
         this.alienIdSetInterval = setInterval(()=>{
             this.showElement('jetFighter',this.state.jet.x, this.state.jet.y); //SHOW JET
             gameSpace.moveAlien();
-            if(this.state.alien.y === 11){
+            if(this.state.alien.y >= 11){
                 clearInterval(this.alienIdSetInterval);
             }
         },200);
+        return true;
     }
 
 
@@ -484,6 +485,8 @@ document.addEventListener('DOMContentLoaded', function(){
         }
     }
 
+
+    //WINNING GAME CONDITION
     winningGame = () => {
         if (this.state.hitted >= 200){
             console.log('End of game ! You are winner !');
@@ -498,6 +501,39 @@ document.addEventListener('DOMContentLoaded', function(){
         }
     }
 
+
+    weaponAlienActivation = () => {
+        this.moveAlienMissle(this.state.alien.x,this.state.alien.y+1);  //FIRE MISSLE FROM ALIEN SPACESHIP
+    }
+
+    //Move Alien missle down on the board
+    //moveAlienMissle(this.state.alien.x,this.state.alien.y)
+    moveAlienMissle = (positionX,positionY) =>{
+        console.log('Pocisk wystrzelony');
+        let spaceAlien = this;
+        let missleAPositionY = positionY;
+        let missleAPositionX = positionX;
+        this.alienMissleInterval = setInterval(()=>{
+
+            if(missleAPositionY < 10){
+                spaceAlien.showElement('',missleAPositionX, missleAPositionY);  //HIDE MISSLE
+                missleAPositionY = missleAPositionY + 1;
+                spaceAlien.showElement('fireMissle',missleAPositionX, missleAPositionY);  //SHOW MISSLE
+                console.log('Missle in board', missleAPositionY);
+            }
+            else if(missleAPositionY >= 10){
+                spaceAlien.showElement('',missleAPositionX, missleAPositionY);  //HIDE MISSLE
+                console.log('Missle cleared', missleAPositionY);
+                missleAPositionY = 0;
+                clearInterval(this.alienMissleInterval);
+            }
+        },90);
+    }
+
+
+
+
+
     componentDidMount(){
         if(this.state.endGame !== true){
             //INITIAL BOARD WITH SPACE SHIPS and other settings
@@ -509,10 +545,27 @@ document.addEventListener('DOMContentLoaded', function(){
             //------------------------------END INITIAL STATE----------------------------
 
 
+            //FIRE ALIEN WEAPON
+
+            /*this.weaponTimeInterval = setInterval(()=>{
+                //this.weaponAlienActivation();
+                this.moveAlienMissle(this.state.alien.x,this.state.alien.y+1);
+                //clearTimeout(this.weaponTimeInterval);
+                console.log('koniec wyswietlania');
+            },3200);*/
+
+
             //START MOVING ALIENS SHIPS
             this.startGameIntervalId = setInterval(()=>{
 
-                this.startAliens();     //FIRST ALIEN START
+                if(this.startAliens()){
+                    console.log(this.state.alien.y);
+                    this.weaponTimeInterval = setTimeout(()=>{
+                        this.moveAlienMissle(this.state.alien.x,this.state.alien.y+1);
+                    },100);
+                }
+                //this.startAliens();   //FIRST ALIEN START
+
 
                 this.timeIntervalAlien2 = setTimeout(()=>{  //SECOND ALIEN START
                     this.startAlien2();
@@ -524,7 +577,9 @@ document.addEventListener('DOMContentLoaded', function(){
 
                 //ACTUALIZE JET FIGTER VIEW
                 this.showElement('jetFighter',this.state.jet.x, this.state.jet.y); //SHOW JET
-                if(this.state.alien.y === 11){
+
+                //RESET MISSED ALLIENS
+                if(this.state.alien.y >= 11){
                     this.resetAlien();
                     this.actualizeMissedAliens();
                 }
