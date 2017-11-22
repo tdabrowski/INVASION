@@ -139,8 +139,26 @@ document.addEventListener('DOMContentLoaded', function(){
             },1500);
 
             return true;
-
-        } else {
+        }
+        else if (this.state.alien3.x === positionX && this.state.alien3.y === positionY){
+            console.log('hitted by missle alien3 !');
+            clearInterval(this.alien3IdSetInterval);
+            this.showElement('',this.state.alien3.x, this.state.alien3.y);  //HIDE ALIEN
+            this.setState({
+                score: this.state.score + 100,
+                hitted: this.state.hitted + 1,
+                alien3: {
+                    x:Math.floor(Math.random() * 11),
+                    y:0
+                },
+                text: 'Yeah ..!!! Alien ship destroyed !'
+            });
+            this.messageInterval = setTimeout(()=>{
+                this.setState({ text: ''});
+            },1500);
+            return true;
+        }
+        else {
             return false;
         }
     }
@@ -198,6 +216,58 @@ document.addEventListener('DOMContentLoaded', function(){
             });
         }
     }
+
+
+
+
+
+    //Move Alien2 down in the board
+    moveAlien3 = () =>{
+        if(this.state.alien3.y < 10){
+            this.showElement('',this.state.alien3.x, this.state.alien3.y);  //Hide ALIEN
+            this.setState({
+                alien3:{
+                    x: this.state.alien3.x,
+                    y: this.state.alien3.y + 1,
+                }
+            });
+            //colisionDetection
+            //this.colisionDetection();  //Colision Detection with Jet Fighter
+            this.colisionDetectionUniversal(this.state.alien3.x, this.state.alien3.y, this.resetAlien3, this.alien3IdSetInterval);  //ALIEN2
+            this.showElement('alien',this.state.alien3.x, this.state.alien3.y); //SHOW ALIEN
+        }
+        else if (this.state.alien3.y === 10){
+            this.showElement('',this.state.alien3.x, this.state.alien3.y);  //HIDE ALIEN
+            this.setState({
+                alien3:{
+                    x: this.state.alien3.x,
+                    y: this.state.alien3.y + 1,
+                }
+            });
+        }
+    }
+
+
+
+    ///---------------------------------------------------------------------------
+    //Move Alien Universal
+    //moveAlienUniversal(this.state.alien2.x,this.state.alien2.y,this.resetAlien2,this.alien2IdSetInterval);
+    moveAlienUniversal = (positionAlienX,positionAlienY,reset,alienIntervalId) =>{
+        if(positionAlienY < 10){
+            this.showElement('',positionAlienX, positionAlienY);  //Hide ALIEN
+            reset();  //RESET ALIEN POSITION
+            //colisionDetection
+            //this.colisionDetection();  //Colision Detection with Jet Fighter
+            this.colisionDetectionUniversal(positionAlienX, positionAlienY, reset, alienIntervalId);  //ALIEN2
+            this.showElement('alien',positionAlienX, positionAlienY); //SHOW ALIEN
+        }
+        else if (positionAlienY === 10){
+            this.showElement('',positionAlienX, positionAlienY);  //HIDE ALIEN
+            reset(); //RESET ALIEN POSITION
+        }
+    }
+    //------------------------------------------------------------------------------
+
 
 
     steringJet = (event)=> {
@@ -303,6 +373,7 @@ document.addEventListener('DOMContentLoaded', function(){
                 console.log('End of game ! We were killed');
                 clearInterval(this.alienIdSetInterval);
                 clearInterval(this.alien2IdSetInterval);
+                clearInterval(this.alien3IdSetInterval);
                 clearInterval(this.startGameIntervalId);
                 this.setState({
                     endGame: true
@@ -373,6 +444,21 @@ document.addEventListener('DOMContentLoaded', function(){
     }
 
 
+    startAlien3 = () => {
+        let gameSpace = this;
+        this.alien3IdSetInterval = setInterval(()=>{
+            this.showElement('jetFighter',this.state.jet.x, this.state.jet.y); //SHOW JET
+            //gameSpace.moveAlienUniversal(this.state.alien3.x,this.state.alien3.y,this.resetAlien3,this.alien3IdSetInterval);
+            gameSpace.moveAlien3();
+            /*this.setState({
+                score: this.state.score + 10
+            });*/
+            if(this.state.alien3.y === 11){
+                clearInterval(this.alien3IdSetInterval);
+            }
+        },200);
+    }
+
 
     componentDidMount(){
         if(this.state.endGame !== true){
@@ -391,7 +477,11 @@ document.addEventListener('DOMContentLoaded', function(){
 
                 this.timeIntervalAlien2 = setTimeout(()=>{  //SECOND ALIEN START
                     this.startAlien2();
-                },1000);
+                },61000);
+
+                this.timeIntervalAlien3 = setTimeout(()=>{  //THIRD ALIEN START
+                    this.startAlien3();
+                },122000);
                 //this.startAlien2();
 
                 this.showElement('jetFighter',this.state.jet.x, this.state.jet.y); //SHOW JET
@@ -406,12 +496,10 @@ document.addEventListener('DOMContentLoaded', function(){
                 if(this.state.alien2.y === 11){
                     this.resetAlien2();
                 }
+                if(this.state.alien3.y === 11){
+                    this.resetAlien3();
+                }
             },3000);
-
-
-
-
-
 
         }
     }
