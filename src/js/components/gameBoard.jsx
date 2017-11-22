@@ -1,46 +1,47 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import {Score} from './score.jsx';
+import {MessageWindow} from './messageWindow.jsx';
+import {EndGame} from './endGame.jsx';
 
 
-document.addEventListener('DOMContentLoaded', function(){
-
-    class JetFighter{
-        constructor(){
-            this.x = 5;
-            this.y = 10;
-            this.direction = "up";
-        }
+class JetFighter{
+    constructor(){
+        this.x = 5;
+        this.y = 10;
+        this.direction = "up";
     }
+}
 
-    class Alien{
-        constructor(){
-            this.x = Math.floor(Math.random() * 11);
-            this.y = 0;
-        }
+class Alien{
+    constructor(){
+        this.x = Math.floor(Math.random() * 11);
+        this.y = 0;
     }
+}
 
 
-//Main Game Component
-    class GameBoard extends React.Component {
-        constructor(props){
-            super(props);
-            this.state={
-                countDownToEnd:5,       //player jet lives (substracted by one when hitted)
-                missedAliens:0,         // if number of missed aliens will be greater than 10 player will lose game
-                endGame: false,             // state of all game
-                endMessage: '',         //Message on end game panel
-                text: '',       //text message for player when hitted
-                counter: 200,   //key id start number for new elements
-                board: [],          //board for the game (grid with divs)
-                jet: new JetFighter(),    //jet fighter
-                alien: new Alien(),         //first alien spaceship
-                alien2: new Alien(),        //second alien spaceship
-                alien3: new Alien(),        //third alien spaceship
-                score: 0,                   //player score (+10 for fly one grid element and +100 for hitting alien)
-                hitted: 0,              //hitted aliens by missle
-                fire: false,   //spacebar - missle don't fired
-            };
-        }
+//Main Game Engine Component
+class GameBoard extends React.Component {
+    constructor(props){
+        super(props);
+        this.state={
+            countDownToEnd:5,       //player jet lives (substracted by one when hitted)
+            missedAliens:0,         // if number of missed aliens will be greater than 10 player will lose game
+            endGame: false,             // state of all game
+            endMessage: '',         //Message on end game panel
+            text: '',       //text message for player when hitted
+            counter: 200,   //key id start number for new elements
+            board: [],          //board for the game (grid with divs)
+            jet: new JetFighter(),    //jet fighter
+            alien: new Alien(),         //first alien spaceship
+            alien2: new Alien(),        //second alien spaceship
+            alien3: new Alien(),        //third alien spaceship
+            score: 0,                   //player score (+10 for fly one grid element and +100 for hitting alien)
+            hitted: 0,              //hitted aliens by missle
+            fire: false,   //spacebar - missle don't fired
+        };
+    }
 
     //Position index in board table
     index = (x,y) => {
@@ -635,78 +636,8 @@ document.addEventListener('DOMContentLoaded', function(){
         }
 
     }
-  }
-
-
-    class MessageWindow extends React.Component{
-        render(){
-            const styles={
-                display: 'flex',
-                flexDirection: 'column',
-                aligneItems: 'center',
-                justifyContent: 'center',
-                width: '704px',
-                height: '40px',
-                margin: '1em auto'
-            }
-            return (
-                <div style={styles}>
-                    <h2 style={{color:'white', textAlign:'center', display:'inline-block'}}>{this.props.text}</h2>
-                </div>
-            );
-        }
-    }
-
-
-    class Score extends React.Component {
-        render() {
-            return (
-                <section id='score'>
-                  <div>
-                    SCORE:
-                    <strong>{this.props.score}</strong><br/>
-                    HITTED:
-                    <strong>{this.props.hitted}</strong><br/>
-                    JETFIGHTERS:
-                    <strong>{this.props.jets}</strong><br/>
-                    MISSED ALIENS:
-                    <strong>{this.props.missedAliens}</strong>
-                  </div>
-                </section>
-            );
-        }
-    }
+}
 
 
 
-
-
-    class EndGame extends React.Component {
-        render() {
-            return (
-                <div>
-                    <h1 style={{color:'white', marginTop: '300px', textAlign:'center', fontSize:'46px'}}>Game over</h1>;
-                    <h3 style={{color:'white',textAlign:'center'}}>{this.props.endMessage}</h3>
-                    <h2 style={{color:'white',textAlign:'center'}}>SCORE: {this.props.score}</h2>
-                    <h3 style={{color:'white',textAlign:'center'}}>DISTROYED SHIPS: {this.props.hitted}</h3>
-                </div>
-            );
-        }
-    }
-
-
-
-    class App extends React.Component {
-        render() {
-            return (
-                <GameBoard/>
-            );
-        }
-    }
-
-
-    ReactDOM.render(
-        <App/>,
-        document.getElementById('app')
-    );
-});
+export {GameBoard}

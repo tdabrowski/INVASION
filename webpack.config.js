@@ -1,6 +1,7 @@
 module.exports	=	{
-	entry:	"./js/app.jsx",
-	output:	{filename:"./js/out.js"	},
+	//entry:	"./js/app.jsx",
+	entry:	"./src/js/app.jsx",
+	output:	{filename:"./js/main.js"	},
 	devServer: {
 		inline: true,
 		contentBase:'./',
