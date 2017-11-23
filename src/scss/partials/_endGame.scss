@@ -1,0 +1,13 @@
+/*EndGame COMPONENT SETTINGS*/
+
+.endgame__container {
+    .endgame__header{
+        color:map-get($endGameColors,text);
+        margin-top: 300px;
+        text-align: center;
+        font-size: map-get($endGameFonts,header);
+    }
+    .endgame__endmessage, .endgame__score, .endgame__enemies {
+        @extend %textSetup;
+    }
+}

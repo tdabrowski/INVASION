@@ -1,0 +1,19 @@
+
+
+.score__jets{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    .score__jet{
+        display:inline-block;
+        color:white;
+        background-image: url('../images/rocket.png');
+        background-repeat: no-repeat;
+        background-size: contain;
+        background-position: center center;
+        width: 30px;
+        height: 45px;
+        margin-right: 5px;
+    }
+}

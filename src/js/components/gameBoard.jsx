@@ -549,7 +549,7 @@ class GameBoard extends React.Component {
     }
 
 
-
+    
     componentDidMount(){
         if(this.state.endGame !== true){
             //INITIAL BOARD WITH SPACE SHIPS and other settings

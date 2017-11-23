@@ -1,0 +1,16 @@
+.score__section {
+
+}
+
+.score__container {
+    width: 704px;
+    margin: 0 auto;
+    margin-top: 20px;
+    border-radius: 15px;
+    background-color: map-get($scoreColors,backgroundPanel);
+    height: 60px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
