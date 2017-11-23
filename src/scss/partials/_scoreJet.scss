@@ -8,9 +8,7 @@
     .score__jet{
         display:inline-block;
         background-image: url('../images/rocket.png');
-        background-repeat: no-repeat;
-        background-size: contain;
-        background-position: center center;
+        @extend %imageSet;
         width: 30px;
         height: 45px;
         margin-right: 5px;

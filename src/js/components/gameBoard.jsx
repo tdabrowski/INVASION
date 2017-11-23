@@ -627,11 +627,11 @@ class GameBoard extends React.Component {
         if(this.state.endGame === false){
             return (
                 <div>
-                  <Score score={this.state.score} hitted={this.state.hitted} jets={this.state.countDownToEnd} missedAliens={this.state.missedAliens}/>
-                  <section id='board'>
-                    {this.state.board}
-                  </section>
-                  <MessageWindow text={this.state.text}/>
+                    <Score score={this.state.score} hitted={this.state.hitted} jets={this.state.countDownToEnd} missedAliens={this.state.missedAliens}/>
+                    <section className="gameBoard__container">
+                        {this.state.board}
+                    </section>
+                    <MessageWindow text={this.state.text}/>
                 </div>
             );
         }

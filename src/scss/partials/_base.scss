@@ -8,45 +8,17 @@
 body {
     font-size: 16px;
     font-family: 'Play', Arial, sans-serif;
-    margin: 0;
-    padding: 0;
     background-image: url('../images/stars.jpg');
+
     background-position: center center;
-    background-repeat: none;
     background-size: cover;
     background-repeat: no-repeat;
+    //background: gray url('../images/nebula.jpg') repeat 0 0;
+    //-webkit-animation: slide 30s linear infinite;
 }
 
 
-#board {
-  width: 704px;
-  height: 704px;
-  margin: 1em auto;
-}
-
-#board  > div {
-
-  float: left;
-  width: 64px;
-  height: 64px;
-}
-
-
-.jetFighter {
-  background-image: url('../images/rocket.png');
-  background-repeat: no-repeat;
-  background-size: contain;
-  background-position: center center;
-}
-.alien {
-  background-image: url('../images/alienSpaceShip.gif');
-  background-repeat: no-repeat;
-  background-size: contain;
-  background-position: center center;
-}
-.fireMissle {
-  background-image: url('../images/white-small-square.png');
-  background-repeat: no-repeat;
-  background-size: contain;
-  background-position: center center;
+@-webkit-keyframes slide {
+    from { background-position: 0 0; }
+    to { background-position: 0 1023px; }
 }
