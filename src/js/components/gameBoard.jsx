@@ -95,9 +95,13 @@ class GameBoard extends React.Component {
                 }
                 if(misslePositionY < 0){
                     space.setState({
+                        text: 'RARGH ... ! Missle Mised !',
                         fire:false
                     });
                     clearInterval(this.missleInterval);
+                    this.messageInterval = setTimeout(()=>{
+                        this.setState({ text: ''});
+                    },1500);
                 }
             }
         },30);
@@ -515,7 +519,7 @@ class GameBoard extends React.Component {
                         x:5,
                         y:10
                     },
-                    text: 'SHIT ! WE WERE HIT BY MISSLE !'
+                    text: 'SHIT ! We were hit by missle !'
                 });
                 this.messageInterval = setTimeout(()=>{
                     this.setState({ text: ''});
@@ -549,7 +553,7 @@ class GameBoard extends React.Component {
     }
 
 
-    
+
     componentDidMount(){
         if(this.state.endGame !== true){
             //INITIAL BOARD WITH SPACE SHIPS and other settings
