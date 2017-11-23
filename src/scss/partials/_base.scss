@@ -8,13 +8,8 @@
 body {
     font-size: 16px;
     font-family: 'Play', Arial, sans-serif;
-    background-image: url('../images/stars.jpg');
-
-    background-position: center center;
-    background-size: cover;
-    background-repeat: no-repeat;
-    //background: gray url('../images/nebula.jpg') repeat 0 0;
-    //-webkit-animation: slide 30s linear infinite;
+    background: gray url('../images/space.png') repeat 0 0;
+    -webkit-animation: slide 20s linear infinite;
 }
 
 
