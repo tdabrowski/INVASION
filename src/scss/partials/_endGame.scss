@@ -9,5 +9,6 @@
     }
     .endgame__endmessage, .endgame__score, .endgame__enemies {
         @extend %textSetup;
+        color:map-get($endGameColors,other);
     }
 }

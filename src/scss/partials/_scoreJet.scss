@@ -1,4 +1,4 @@
-
+/*ScoreJet COMPONENT SETTINGS*/
 
 .score__jets{
     display: flex;
@@ -7,7 +7,6 @@
     align-items: center;
     .score__jet{
         display:inline-block;
-        color:white;
         background-image: url('../images/rocket.png');
         background-repeat: no-repeat;
         background-size: contain;

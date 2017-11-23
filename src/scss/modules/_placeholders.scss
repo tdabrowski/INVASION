@@ -4,3 +4,18 @@
     text-align: center;
     margin-top: 10px;
 }
+
+
+/*ScoreElement and ScoreMissed placeholders*/
+%statBox {
+    border: 1px solid map-get($scoreElementColors,border);
+    display: inline-block;
+    border-radius: 15px;
+    width:165px;
+    color: map-get($scoreElementColors,text);
+    height: 40px;
+    padding: 10px 5px;
+    strong {
+        color:map-get($scoreElementColors,score);
+    }
+}

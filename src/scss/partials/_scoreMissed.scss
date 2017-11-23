@@ -1,0 +1,6 @@
+/*ScoreMissed COMPONENT SETTINGS*/
+
+.score__missed{
+    @extend %statBox;
+    background-color: map-get($scoreElementColors,backgroundPanel);
+}

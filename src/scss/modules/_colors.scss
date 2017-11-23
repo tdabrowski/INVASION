@@ -5,15 +5,23 @@ $scoreColors:(
     backgroundPanel:#20202b
 );
 
+$scoreElementColors:(
+    text: white,
+    score: gold,
+    border: white,
+    backgroundPanel:green
+);
+
 
 /*MESSAGE WINDOW COMPONENT COLOR SETTINGS */
 $messageWindowColors:(
-    text: white,
+    text: gold,
     backgroundPanel:#20202b
 );
 
 
 /*ENDGAME COMPONENT COLOR SETTINGS */
 $endGameColors:(
-    text: white
+    text: white,
+    other:gold
 )

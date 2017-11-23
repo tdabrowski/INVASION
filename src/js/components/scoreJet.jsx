@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-//Live statistics about player score, hitted enemies, jets number and missedAliens
+//COMPONENT SHOWING NUMBER OF AVAILABLE JETS
 class ScoreJet extends React.Component {
     render() {
         let jets = [];
