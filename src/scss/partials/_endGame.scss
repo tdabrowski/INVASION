@@ -1,14 +1,11 @@
 /*EndGame COMPONENT SETTINGS*/
 
 .endgame__container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+    @extend %flexCenter;
     .endgame__header{
-        color:map-get($endGameColors,text);
         margin-top: 300px;
         text-align: center;
+        color:map-get($endGameColors,text);
         font-size: map-get($endGameFonts,header);
     }
     .endgame__endmessage, .endgame__score, .endgame__enemies {
@@ -16,10 +13,8 @@
         color:map-get($endGameColors,other);
     }
     .endgame__about{
-        display: inline-block;
+        @extend %elementSet;
         margin-top: 40px;
         width: 400px;
-        text-align: center;
-        cursor: pointer;
     }
 }

@@ -1,10 +1,11 @@
+/*Reset*/
 *{
     box-sizing: border-box;
     padding:0;
     margin: 0;
 }
 
-
+/*Main body setup with moving sky*/
 body {
     font-size: 16px;
     font-family: 'Play', Arial, sans-serif;
@@ -12,7 +13,7 @@ body {
     -webkit-animation: slide 20s linear infinite;
 }
 
-
+//Animation for background moving
 @-webkit-keyframes slide {
     from { background-position: 0 0; }
     to { background-position: 0 1023px; }

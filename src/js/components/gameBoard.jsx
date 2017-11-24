@@ -38,7 +38,7 @@ class GameBoard extends React.Component {
             missedAliens:0,         // if number of missed aliens will be greater than 10 player will lose game
             endGame: false,             // state of all game
             endMessage: '',         //Message on end game panel
-            text: '',       //text message for player when hitted
+            text: 'GET READY ! They are coming... ',       //text message for player from pilot
             counter: 200,   //key id start number for new elements
             board: [],          //board for the game (grid with divs)
             jet: new JetFighter(),    //jet fighter
@@ -376,7 +376,7 @@ class GameBoard extends React.Component {
             this.showElement('',this.state.jet.x, this.state.jet.y); //SHOW JET
             this.setState({
                 countDownToEnd: this.state.countDownToEnd - 1,
-                text: 'Damn ! We were hitted ! Hold on !',
+                text: 'Damn ! We were hit, we were hit ! Hold on !',
                 jet: {
                     x: 5,
                     y: 10
@@ -527,7 +527,7 @@ class GameBoard extends React.Component {
                         x:5,
                         y:10
                     },
-                    text: 'SHIT ! We were hit by missle !'
+                    text: 'SHIT ! We were hit by missle ! You will not get me alive ! '
                 });
                 this.messageInterval = setTimeout(()=>{
                     this.setState({ text: ''});

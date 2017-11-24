@@ -1,5 +1,5 @@
 /*GameBoard COMPONENT SETTINGS*/
-
+/*Game grid settings*/
 .gameBoard__container{
     width: 704px;
     height: 704px;
@@ -9,10 +9,10 @@
         width: 64px;
         height: 64px;
     }
-    
+
 }
 
-
+//Images of main moving elements on board
 .jetFighter {
     background-image: url('../images/rocket.png');
     @extend %imageSet;

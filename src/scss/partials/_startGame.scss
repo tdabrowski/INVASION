@@ -1,43 +1,34 @@
 /*StartGame COMPONENT SETTINGS*/
 
 .startgame__container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+    @extend %flexCenter;
     .startgame__header{
-        color:map-get($startGameColors,text);
         margin-top: 300px;
         text-align: center;
+        color:map-get($startGameColors,text);
         font-size: map-get($startGameFonts,header);
     }
     .startgame__run{
-        display:inline-block;
-        color:map-get($startGameColors,main);
+        @extend %elementSet;
         margin-top: 20px;
-        text-align: center;
+        color:map-get($startGameColors,main);
         font-size: map-get($startGameFonts,run);
-        cursor: pointer;
     }
     .startgame__other {
-        display:inline-block;
-        text-align: center;
+        @extend %elementSet;
         font-size: map-get($startGameFonts,other);
         color:map-get($startGameColors,main);
-        cursor: pointer;
     }
     .startgame__rules {
-        display:inline-block;
+        @extend %elementSet;
         width: 600px;
-        text-align: center;
         font-size: map-get($startGameFonts,rules);
         color:map-get($startGameColors,text);
-        cursor: pointer;
         >strong {
-            font-size: 26px;
+            font-size: map-get($startGameFonts,strong);
         }
         >span {
-            font-size: 16px;
+            font-size: map-get($startGameFonts,span);
         }
     }
 }

@@ -1,10 +1,7 @@
 /*MESSAGE WINDOW SETTINGS*/
 
 .message__containter {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+    @extend %flexCenter;
     border-radius: 10px;
     background-color: map-get($messageWindowColors,backgroundPanel);
     width: 704px;

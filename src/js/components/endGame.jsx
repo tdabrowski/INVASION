@@ -20,7 +20,7 @@ class EndGame extends React.Component {
     render() {
         let element = '';
         if(this.state.control === false){
-            element = <h3 className="endgame__about"  style={{color:'white'}} onClick={this.handleAbout}>About</h3>;
+            element = <h3 className="endgame__about"  style={{color:'white'}} onClick={this.handleAbout}>About game</h3>;
         } else {
             element =   <p className="endgame__about" style={{color:'white'}} onClick={this.handleAbout}>
                             Thank you for playing. Game inspired by Space Invaders Tomohiro Nishikado.

@@ -1,10 +1,8 @@
 /*ScoreJet COMPONENT SETTINGS*/
 
 .score__jets{
-    display: flex;
+    @extend %flexCenter;
     flex-direction: row;
-    justify-content: center;
-    align-items: center;
     .score__jet{
         display:inline-block;
         background-image: url('../images/rocket.png');
