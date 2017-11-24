@@ -31,7 +31,7 @@ class StartGame extends React.Component {
         } else {
             element =   <p className="startgame__rules" onClick={this.handleRules}>
                             Aliens have going to take control over your planet. You have to destory all
-                            enemy space ships (120) to defend your homeland.
+                            enemy space ships (150) to defend your homeland.
                             Remember... aliens can have shilds so sometimes single missle can't destroy them always
                             and you can miss hit the target ! If you want avoid collision with alien space ship force up speed to fly over.
                             <br/>This is outer space and this is war !

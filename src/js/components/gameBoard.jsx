@@ -467,7 +467,7 @@ class GameBoard extends React.Component {
 
     //WINNING GAME CONDITION
     winningGame = () => {
-        if (this.state.hitted >= 120){
+        if (this.state.hitted >= 150){
             clearInterval(this.alienIdSetInterval);
             clearInterval(this.alien2IdSetInterval);
             clearInterval(this.alien3IdSetInterval);
