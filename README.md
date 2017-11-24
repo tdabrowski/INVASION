@@ -1,2 +1,2 @@
 # SIMPLE-GAME
-Fly in space
+INVASION - space shooter written in React JavaScript library and Sass
