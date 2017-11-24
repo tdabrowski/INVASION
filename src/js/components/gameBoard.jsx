@@ -24,6 +24,12 @@ class Alien{
 
 //Main Game Engine Component
 class GameBoard extends React.Component {
+    /*GAME VERSION 1.0.0
+    Title: INVASION
+    TimeStamp: 2017-11-24
+    Created by Tom Dabrowski
+    Mail: tom.dabrowski@yahoo.com
+    */
     constructor(props){
         super(props);
         this.state={
@@ -567,10 +573,6 @@ class GameBoard extends React.Component {
                     this.steringJet(event);
                 });
                 //------------------------------END INITIAL STATE----------------------------
-
-
-
-
 
                 //START MOVING ALIENS SHIPS
                 this.startGameIntervalId = setInterval(()=>{
