@@ -1,0 +1,6 @@
+//GLOBAL ANIMATION PREFIX MIXIN
+@mixin animate($keyName,$duration,$repeatCount,$type){
+    animation: $keyName $duration $repeatCount $type;
+    -moz-animation: $keyName $duration $repeatCount $type;
+    -webkit-animation: $keyName $duration $repeatCount $type;
+}

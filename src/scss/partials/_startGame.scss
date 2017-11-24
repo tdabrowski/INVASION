@@ -13,6 +13,7 @@
         margin-top: 20px;
         color:map-get($startGameColors,main);
         font-size: map-get($startGameFonts,run);
+        @include animate(showHideContent,2.5s,infinite,steps(60));  //Animation start game
     }
     .startgame__other {
         @extend %elementSet;
@@ -30,5 +31,6 @@
         >span {
             font-size: map-get($startGameFonts,span);
         }
+        @include animate(showContent,2s,1,steps(60));  //Animation for rules info
     }
 }

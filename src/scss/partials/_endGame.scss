@@ -16,5 +16,6 @@
         @extend %elementSet;
         margin-top: 40px;
         width: 400px;
+        @include animate(showContent,1s,1,steps(60));  //Animation for about section
     }
 }

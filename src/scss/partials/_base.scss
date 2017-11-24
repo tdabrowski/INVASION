@@ -10,11 +10,6 @@ body {
     font-size: 16px;
     font-family: 'Play', Arial, sans-serif;
     background: gray url('../images/space.png') repeat 0 0;
-    -webkit-animation: slide 20s linear infinite;
-}
-
-//Animation for background moving
-@-webkit-keyframes slide {
-    from { background-position: 0 0; }
-    to { background-position: 0 1023px; }
+    //-webkit-animation: slide 20s linear infinite;
+    @include animate(slide,20s,linear,infinite);  //Animation for sky
 }
