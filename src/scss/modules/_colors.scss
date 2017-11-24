@@ -2,7 +2,7 @@
 /*SCORE COMPONENT COLOR SETTINGS */
 $scoreColors:(
     text: white,
-    backgroundPanel:#20202b
+    backgroundPanel:rgba(32, 32, 43, 0.75)
 );
 
 $scoreElementColors:(
@@ -16,7 +16,8 @@ $scoreElementColors:(
 /*MESSAGE WINDOW COMPONENT COLOR SETTINGS */
 $messageWindowColors:(
     text: gold,
-    backgroundPanel:#20202b
+    backgroundPanel:rgba(32, 32, 43, 0.75)
+    //#20202b
 );
 
 

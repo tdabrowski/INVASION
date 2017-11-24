@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import {StartGame} from './startGame.jsx';
 import {Score} from './score.jsx';
 import {MessageWindow} from './messageWindow.jsx';
 import {EndGame} from './endGame.jsx';
@@ -26,6 +27,7 @@ class GameBoard extends React.Component {
     constructor(props){
         super(props);
         this.state={
+            startGame: false,
             countDownToEnd:5,       //player jet lives (substracted by one when hitted)
             missedAliens:0,         // if number of missed aliens will be greater than 10 player will lose game
             endGame: false,             // state of all game
@@ -555,53 +557,57 @@ class GameBoard extends React.Component {
 
 
     componentDidMount(){
-        if(this.state.endGame !== true){
-            //INITIAL BOARD WITH SPACE SHIPS and other settings
-            this.showElement('jetFighter',this.state.jet.x, this.state.jet.y); //SHOW JET
-            //Activate Stering jetfighter
-            document.addEventListener('keydown', (event) =>{
-                this.steringJet(event);
-            });
-            //------------------------------END INITIAL STATE----------------------------
-
-
-
-
-
-            //START MOVING ALIENS SHIPS
-            this.startGameIntervalId = setInterval(()=>{
-
-                if(this.startAliens()){ //FIRST ALIEN START AND ACTIVATE WEAPON
-                    this.weaponTimeInterval = setTimeout(()=>{
-                        this.moveAlienMissle(this.state.alien.x,this.state.alien.y+1);
-                    },100);
-                }
-                this.timeIntervalAlien2 = setTimeout(()=>{  //SECOND ALIEN START
-                    this.startAlien2();
-                },61000);
-                this.timeIntervalAlien3 = setTimeout(()=>{  //THIRD ALIEN START
-                    this.startAlien3();
-                },121500);
-
-                //ACTUALIZE JET FIGTER VIEW
+        //CHECKING IF PLAYER ACTIVATE GAME FROM START GAME PANEL
+        this.manageInterval = setInterval(()=>{
+            if(this.state.endGame !== true && this.state.startGame === true){
+                //INITIAL BOARD WITH SPACE SHIPS and other settings
                 this.showElement('jetFighter',this.state.jet.x, this.state.jet.y); //SHOW JET
+                //Activate Stering jetfighter
+                document.addEventListener('keydown', (event) =>{
+                    this.steringJet(event);
+                });
+                //------------------------------END INITIAL STATE----------------------------
 
-                //RESET MISSED ALLIENS
-                if(this.state.alien.y >= 11){
-                    this.resetAlien();
-                    this.actualizeMissedAliens();
-                }
-                if(this.state.alien2.y === 11){
-                    this.resetAlien2();
-                    this.actualizeMissedAliens();
-                }
-                if(this.state.alien3.y === 11){
-                    this.resetAlien3();
-                    this.actualizeMissedAliens();
-                }
-            },3000);
 
-        }
+
+
+
+                //START MOVING ALIENS SHIPS
+                this.startGameIntervalId = setInterval(()=>{
+
+                    if(this.startAliens()){ //FIRST ALIEN START AND ACTIVATE WEAPON
+                        this.weaponTimeInterval = setTimeout(()=>{
+                            this.moveAlienMissle(this.state.alien.x,this.state.alien.y+1);
+                        },100);
+                    }
+                    this.timeIntervalAlien2 = setTimeout(()=>{  //SECOND ALIEN START
+                        this.startAlien2();
+                    },61000);
+                    this.timeIntervalAlien3 = setTimeout(()=>{  //THIRD ALIEN START
+                        this.startAlien3();
+                    },121500);
+
+                    //ACTUALIZE JET FIGTER VIEW
+                    this.showElement('jetFighter',this.state.jet.x, this.state.jet.y); //SHOW JET
+
+                    //RESET MISSED ALLIENS
+                    if(this.state.alien.y >= 11){
+                        this.resetAlien();
+                        this.actualizeMissedAliens();
+                    }
+                    if(this.state.alien2.y === 11){
+                        this.resetAlien2();
+                        this.actualizeMissedAliens();
+                    }
+                    if(this.state.alien3.y === 11){
+                        this.resetAlien3();
+                        this.actualizeMissedAliens();
+                    }
+                },3000);
+                clearInterval(this.manageInterval);
+            }
+
+        },1000); //end of main interval
     }
 
     componentWillUnmount(){
@@ -610,6 +616,7 @@ class GameBoard extends React.Component {
         clearInterval(this.alien2IdSetInterval);
         clearInterval(this.alien3IdSetInterval);
         clearInterval(this.startGameIntervalId);
+        clearInterval(this.manageInterval);
     }
 
 
@@ -623,8 +630,19 @@ class GameBoard extends React.Component {
         });
     }
 
+
+    //Handle event on click from Component startGame
+    handleStartGame = () => {
+        this.setState({
+            startGame: !this.state.startGame,
+        });
+    }
+
     render(){
-        if(this.state.endGame === false){
+        if(this.state.startGame === false){
+            return <StartGame start={this.handleStartGame}/>
+        }
+        else if(this.state.endGame === false && this.state.startGame === true){
             return (
                 <div>
                     <Score score={this.state.score} hitted={this.state.hitted} jets={this.state.countDownToEnd} missedAliens={this.state.missedAliens}/>
