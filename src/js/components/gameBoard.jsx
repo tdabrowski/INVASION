@@ -24,7 +24,7 @@ class Alien{
 
 //Main Game Engine Component
 class GameBoard extends React.Component {
-    /*GAME VERSION 1.0.0
+    /*GAME VERSION 1.0.1
     Title: INVASION
     TimeStamp: 2017-11-24
     Created by Tom Dabrowski
@@ -557,7 +557,7 @@ class GameBoard extends React.Component {
                     },61000);
                     this.timeIntervalAlien3 = setTimeout(()=>{  //THIRD ALIEN START
                         this.startAlien3();
-                    },121900); //121500
+                    },122100); //121500
 
                     //ACTUALIZE JET FIGTER VIEW
                     this.showElement('jetFighter',this.state.jet.x, this.state.jet.y); //SHOW JET
