@@ -557,7 +557,7 @@ class GameBoard extends React.Component {
                     },61000);
                     this.timeIntervalAlien3 = setTimeout(()=>{  //THIRD ALIEN START
                         this.startAlien3();
-                    },121500);
+                    },121900); //121500
 
                     //ACTUALIZE JET FIGTER VIEW
                     this.showElement('jetFighter',this.state.jet.x, this.state.jet.y); //SHOW JET
