@@ -553,9 +553,11 @@ class GameBoard extends React.Component {
                         },100);
                     }
                     this.timeIntervalAlien2 = setTimeout(()=>{  //SECOND ALIEN START
+                        console.log('timer 2 start');
                         this.startAlien2();
                     },61000);
                     this.timeIntervalAlien3 = setTimeout(()=>{  //THIRD ALIEN START
+                        console.log('timer 3 start');
                         this.startAlien3();
                     },122100); //121500
 
