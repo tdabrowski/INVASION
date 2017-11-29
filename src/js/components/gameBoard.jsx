@@ -24,11 +24,12 @@ class Alien{
 
 //Main Game Engine Component
 class GameBoard extends React.Component {
-    /*GAME VERSION 1.0.1
+    /*GAME VERSION 1.0.2
     Title: INVASION
-    TimeStamp: 2017-11-24
+    TimeStamp: 2017-11-29
     Created by Tom Dabrowski
     Mail: tom.dabrowski@yahoo.com
+    UPDATES: Added better resources handling and weapon activation for all alien ships
     */
     constructor(props){
         super(props);
@@ -365,7 +366,11 @@ class GameBoard extends React.Component {
                 clearInterval(this.alienIdSetInterval);
                 clearInterval(this.alien2IdSetInterval);
                 clearInterval(this.alien3IdSetInterval);
-                clearInterval(this.startGameIntervalId);
+                clearInterval(this.startIntervalShip1);
+                clearInterval(this.startIntervalShip2);
+                clearInterval(this.startIntervalShip3);
+                clearTimeout(this.timeIntervalAlien2);
+                clearTimeout(this.timeIntervalAlien3);
                 this.setState({
                     endMessage : 'JETFIGHTER WAS DESTROYED!',
                     endGame: true
@@ -456,7 +461,11 @@ class GameBoard extends React.Component {
             clearInterval(this.alienIdSetInterval);
             clearInterval(this.alien2IdSetInterval);
             clearInterval(this.alien3IdSetInterval);
-            clearInterval(this.startGameIntervalId);
+            clearInterval(this.startIntervalShip1);
+            clearInterval(this.startIntervalShip2);
+            clearInterval(this.startIntervalShip3);
+            clearTimeout(this.timeIntervalAlien2);
+            clearTimeout(this.timeIntervalAlien3);
             this.setState({
                 endMessage: 'YOU MISSED TOO MUCH ALIEN SHIPS. YOUR PLANET WILL BE DESTROYED !',
                 endGame: true
@@ -471,7 +480,11 @@ class GameBoard extends React.Component {
             clearInterval(this.alienIdSetInterval);
             clearInterval(this.alien2IdSetInterval);
             clearInterval(this.alien3IdSetInterval);
-            clearInterval(this.startGameIntervalId);
+            clearInterval(this.startIntervalShip1);
+            clearInterval(this.startIntervalShip2);
+            clearInterval(this.startIntervalShip3);
+            clearTimeout(this.timeIntervalAlien2);
+            clearTimeout(this.timeIntervalAlien3);
             this.setState({
                 endMessage: 'GRATULATIONS ! YOU CAN BE PROUD YOU HAVE DEFENDED YOUR PLANET ! ALIENS WILL NOT COME BACK SOON !',
                 endGame: true
@@ -508,7 +521,11 @@ class GameBoard extends React.Component {
                     clearInterval(this.alienIdSetInterval);
                     clearInterval(this.alien2IdSetInterval);
                     clearInterval(this.alien3IdSetInterval);
-                    clearInterval(this.startGameIntervalId);
+                    clearInterval(this.startIntervalShip1);
+                    clearInterval(this.startIntervalShip2);
+                    clearInterval(this.startIntervalShip3);
+                    clearTimeout(this.timeIntervalAlien2);
+                    clearTimeout(this.timeIntervalAlien3);
                     this.setState({
                         endMessage : 'JETFIGHTER WAS DESTROYED!',
                         endGame: true
@@ -544,43 +561,60 @@ class GameBoard extends React.Component {
                 });
                 //------------------------------END INITIAL STATE----------------------------
 
-                //START MOVING ALIENS SHIPS
-                this.startGameIntervalId = setInterval(()=>{
 
+                //-------------------START ALIENS MOVING AND ACTIVATE WEAPONS------------------
+                //START ALIEN1
+                this.startIntervalShip1 = setInterval(()=>{
                     if(this.startAliens()){ //FIRST ALIEN START AND ACTIVATE WEAPON
                         this.weaponTimeInterval = setTimeout(()=>{
                             this.moveAlienMissle(this.state.alien.x,this.state.alien.y+1);
                         },100);
                     }
-                    this.timeIntervalAlien2 = setTimeout(()=>{  //SECOND ALIEN START
-                        console.log('timer 2 start');
-                        this.startAlien2();
-                    },61000);
-                    this.timeIntervalAlien3 = setTimeout(()=>{  //THIRD ALIEN START
-                        console.log('timer 3 start');
-                        this.startAlien3();
-                    },122100); //121500
-
                     //ACTUALIZE JET FIGTER VIEW
                     this.showElement('jetFighter',this.state.jet.x, this.state.jet.y); //SHOW JET
-
-                    //RESET MISSED ALLIENS
-                    if(this.state.alien.y >= 11){
+                    if(this.state.alien.y >= 11){  //RESET MISSED ALLIEN
                         this.resetAlien();
                         this.actualizeMissedAliens();
                     }
-                    if(this.state.alien2.y === 11){
-                        this.resetAlien2();
-                        this.actualizeMissedAliens();
-                    }
-                    if(this.state.alien3.y === 11){
-                        this.resetAlien3();
-                        this.actualizeMissedAliens();
-                    }
                 },3000);
+
+
+                //START ALIEN2
+                this.timeIntervalAlien2 = setTimeout(()=>{  //SECOND ALIEN START (~1 minute delay)
+                    this.startIntervalShip2 = setInterval(()=>{
+                        if(this.startAlien2()){ //SECOND ALIEN START AND ACTIVATE WEAPON
+                            this.weaponTimeInterval = setTimeout(()=>{
+                                this.moveAlienMissle(this.state.alien2.x,this.state.alien2.y+1);
+                            },100);
+                        }
+                        //ACTUALIZE JET FIGTER VIEW
+                        this.showElement('jetFighter',this.state.jet.x, this.state.jet.y); //SHOW JET
+                        if(this.state.alien2.y >= 11){  //RESET MISSED ALLIEN2
+                            this.resetAlien2();
+                            this.actualizeMissedAliens();
+                        }
+                    },3000);
+                },61000);
+
+
+                //START ALIEN3
+                this.timeIntervalAlien3 = setTimeout(()=>{  //THIRD ALIEN START (~2 minute delay)
+                    this.startIntervalShip3 = setInterval(()=>{
+                        if(this.startAlien3()){ //THIRD ALIEN START AND ACTIVATE WEAPON
+                            this.weaponTimeInterval = setTimeout(()=>{
+                                this.moveAlienMissle(this.state.alien3.x,this.state.alien3.y+1);
+                            },100);
+                        }
+                        //ACTUALIZE JET FIGTER VIEW
+                        this.showElement('jetFighter',this.state.jet.x, this.state.jet.y); //SHOW JET
+                        if(this.state.alien3.y >= 11){  //RESET MISSED ALLIEN3
+                            this.resetAlien3();
+                            this.actualizeMissedAliens();
+                        }
+                    },3000);
+                },122100);
                 clearInterval(this.manageInterval);
             }
-
         },1000); //end of main interval
     }
 
@@ -589,7 +623,11 @@ class GameBoard extends React.Component {
         clearInterval(this.alienIdSetInterval);
         clearInterval(this.alien2IdSetInterval);
         clearInterval(this.alien3IdSetInterval);
-        clearInterval(this.startGameIntervalId);
+        clearInterval(this.startIntervalShip1);
+        clearInterval(this.startIntervalShip2);
+        clearInterval(this.startIntervalShip3);
+        clearTimeout(this.timeIntervalAlien2);
+        clearTimeout(this.timeIntervalAlien3);
         clearInterval(this.manageInterval);
     }
 
