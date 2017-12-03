@@ -24,12 +24,12 @@ class Alien{
 
 //Main Game Engine Component
 class GameBoard extends React.Component {
-    /*GAME VERSION 1.0.2
+    /*GAME VERSION 1.0.3
     Title: INVASION
-    TimeStamp: 2017-11-29
+    TimeStamp: 2017-12-1
     Created by Tom Dabrowski
     Mail: tom.dabrowski@yahoo.com
-    UPDATES: Added better resources handling and weapon activation for all alien ships
+    UPDATES: Changed delay for second and third alien space ship
     */
     constructor(props){
         super(props);
@@ -594,7 +594,7 @@ class GameBoard extends React.Component {
                             this.actualizeMissedAliens();
                         }
                     },3000);
-                },61000);
+                },76000); //61000
 
 
                 //START ALIEN3
@@ -612,7 +612,7 @@ class GameBoard extends React.Component {
                             this.actualizeMissedAliens();
                         }
                     },3000);
-                },122100);
+                },152100);  //122100
                 clearInterval(this.manageInterval);
             }
         },1000); //end of main interval
