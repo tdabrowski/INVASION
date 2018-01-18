@@ -1,5 +1,5 @@
 # INVASION
-INVASION - space shooter built with technologies like React JavaScript library and Sass
+INVASION - space shooter built with technologies like React JavaScript library and Sass.
 Optimized to best work with Google Chrome Web browser.
 
 ## Game description
@@ -8,10 +8,10 @@ You are a pilot of jetfighter who have to destroy all of the alien ships to defe
 ## Demo
 You can play online http://tdabrowski.github.io
 
-## ToDo
-Compatibility with other web browsers.
-RWD to scale on smaller screen resolutions.
-Game bugs to correct.
-
 ## Game board
 <img src="images/invasion.png" alt="Invasion game board"/>
+
+## ToDo
+1. Compatibility with other web browsers.
+2. RWD to scale on smaller screen resolutions.
+3. Game bugs to correct.
